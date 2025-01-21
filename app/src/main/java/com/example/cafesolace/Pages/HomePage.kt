@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.cafesolace.CommonSection.RoundedItermCart
 import com.example.cafesolace.Data.FoodItems
 import com.example.cafesolace.Data.RoundedItems
@@ -50,6 +51,8 @@ import com.example.cafesolace.FoodCard
 import com.example.cafesolace.Model.Main
 import com.example.cafesolace.Model.Round
 import com.example.cafesolace.R
+import com.example.cafesolace.ui.theme.AuthViewModel
+
 
 @Composable
 fun MainScreen() {
@@ -187,6 +190,8 @@ fun MainScreen() {
             )
         }
     }
+
+
 }
 
 @Composable
