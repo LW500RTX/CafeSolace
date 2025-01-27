@@ -1,38 +1,37 @@
 package com.example.cafesolace.Pages
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.foundation.border
 import androidx.compose.ui.draw.clip
 import com.example.cafesolace.R
 
 @Composable
 fun ProfilePage() {
-    // State variables to hold the user input
     var username by remember { mutableStateOf("Aloka Silva") }
     var email by remember { mutableStateOf("Alokasilva@gmail.com") }
     var password by remember { mutableStateOf("password123") }
     var contact by remember { mutableStateOf("123-456-7890") }
-
-    // State for edit mode
     var isEditable by remember { mutableStateOf(false) }
-
-
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -40,29 +39,28 @@ fun ProfilePage() {
 
         // Profile Image
         Image(
-            painter = painterResource(id = R.drawable.man), // Replace with your image resource
+            painter = painterResource(id = R.drawable.man),
             contentDescription = "Profile Image",
             modifier = Modifier
                 .size(180.dp)
                 .clip(CircleShape)
                 .border(2.dp, Color.Gray, CircleShape),
-            contentScale = ContentScale.Crop // This ensures the image scales nicely inside the circle
+            contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = username,
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.align(Alignment.CenterHorizontally) // Centers the text
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
         Spacer(modifier = Modifier.height(26.dp))
 
-        // Card with background color and elevation
+        // Card with user details
         Card(
             modifier = Modifier.fillMaxWidth(),
-//            elevation = CardDefaults.elevation(8.dp),  // Correct elevation syntax for Material3
             shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(containerColor = Color.LightGray) // Light gray color for the card
+            colors = CardDefaults.cardColors(containerColor = Color.LightGray)
         ) {
             Column(
                 modifier = Modifier
@@ -121,7 +119,7 @@ fun ProfilePage() {
                             value = password,
                             onValueChange = { password = it },
                             label = { Text("Password") },
-                            visualTransformation = PasswordVisualTransformation(), // Masks the password input
+                            visualTransformation = PasswordVisualTransformation(),
                             modifier = Modifier.width(200.dp)
                         )
                     } else {
@@ -153,17 +151,15 @@ fun ProfilePage() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Edit/Save Button with custom color
+        // Edit/Save Button
         Button(
             onClick = {
-                // Toggle edit mode (if currently in edit mode, save the changes)
                 isEditable = !isEditable
-                // You can also add logic to save changes here
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Black,  // Set button background color
-                contentColor = Color.White    // Set text color
+                containerColor = MaterialTheme.colorScheme.scrim,
+                contentColor = Color.White
             )
         ) {
             Text(text = if (isEditable) "Save" else "Edit")
@@ -171,25 +167,27 @@ fun ProfilePage() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-// Logout Button with custom color
+        // Logout Button
         Button(
             onClick = {
                 // Handle logout logic here
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Red,   // Set button background color
-                contentColor = Color.White    // Set text color
+                containerColor = Color.Red,
+                contentColor = Color.White
             )
         ) {
             Text(text = "Logout")
         }
-
+        Spacer(modifier = Modifier.height(90.dp))
     }
+
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProfilePagePreview() {
-    ProfilePage()
-}
+
+//@Preview(showBackground = true)
+//@Composable
+//fun ProfilePagePreview() {
+//    ProfilePage()
+//}

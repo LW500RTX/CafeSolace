@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.example.cafesolace.Model.NavIterm
 import com.example.cafesolace.Pages.MainScreen
 import com.example.cafesolace.Pages.ProductScreen
@@ -25,7 +26,7 @@ import com.example.cafesolace.Pages.ProfilePage
 import com.example.cafesolace.Pages.WishlistPage
 
 @Composable
-fun BottomNavigationScreen(modifier: Modifier = Modifier) {
+fun BottomNavigationScreen(modifier: Modifier = Modifier, navController: NavController) {
 
     val navItermList = listOf(
         NavIterm("Home" , Icons.Default.Home),
@@ -58,14 +59,14 @@ fun BottomNavigationScreen(modifier: Modifier = Modifier) {
             }
         }
         ){ innerPadding ->
-        contentScreen(modifier = Modifier.padding(innerPadding),selectedIndex)
+        contentScreen(modifier = Modifier.padding(innerPadding),selectedIndex, navController = navController)
     }
 }
 @Composable
-fun contentScreen (modifier: Modifier = Modifier,selectedIndex :Int ) {
+fun contentScreen (modifier: Modifier = Modifier,selectedIndex :Int, navController: NavController ) {
 when(selectedIndex){
     0->MainScreen()
-    1->ProductScreen()
+    1->ProductScreen(navController = navController)
     2->WishlistPage()
     3-> ProfilePage()
 }

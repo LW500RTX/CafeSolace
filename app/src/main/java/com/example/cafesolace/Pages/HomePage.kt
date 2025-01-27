@@ -74,7 +74,8 @@ fun MainScreen() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 16.dp)
+                .padding(horizontal = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -157,6 +158,7 @@ fun MainScreen() {
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .align(Alignment.Start)
+                    .padding(horizontal = 10.dp)
             )
 
 
@@ -173,6 +175,7 @@ fun MainScreen() {
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .align(Alignment.Start)
+                    .padding(horizontal = 10.dp)
             )
 
             RoundedItermList(RoundedList = RoundedItems().loadRoundedItems())
@@ -187,7 +190,10 @@ fun MainScreen() {
                     .padding(4.dp)
                     .clip(RoundedCornerShape(16.dp)),
                 contentScale = ContentScale.Crop
+
+
             )
+            Spacer(modifier = Modifier.height(90.dp))
         }
     }
 
@@ -202,7 +208,7 @@ fun CategoryButtons() {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 0.dp), // Padding for the entire LazyRow
+            .padding(horizontal = 18.dp), // Padding for the entire LazyRow
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(28.dp) // Increased space between buttons
     ) {
@@ -222,9 +228,9 @@ fun CategoryButtons() {
                             Color(0xA4A26854) // Default background color
                         },
                         contentColor = if (selectedCategory.value == category) {
-                            Color.White // Text color for selected
+                            MaterialTheme.colorScheme.onSecondaryContainer // Text color for selected
                         } else {
-                            Color.Yellow // Text color for unselected
+                            MaterialTheme.colorScheme.tertiaryContainer // Text color for unselected
                         }
                     ),
                     border = null // Remove or customize the border
@@ -232,9 +238,9 @@ fun CategoryButtons() {
                     Text(
                         text = category,
                         color = if (selectedCategory.value == category) {
-                            Color.Black // Text color for selected
+                            MaterialTheme.colorScheme.primary // Text color for selected
                         } else {
-                            Color.White // Text color for unselected
+                            MaterialTheme.colorScheme.onErrorContainer // Text color for unselected
                         },
                         fontSize = 16.sp, // Custom font size
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold) // Bold text style

@@ -1,6 +1,8 @@
 package com.example.cafesolace.Pages
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,13 +21,16 @@ fun WishlistPage() {
         wishlistItems = emptyList()
     }
 
+    // Scroll state for the vertical scrolling
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState) // Add vertical scrolling to the column
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Spacer(modifier = Modifier.height(30.dp))
 
         // Wishlist title centered at the top
@@ -88,7 +93,7 @@ fun WishlistPage() {
         ) {
             Text(text = "Clear Wishlist")
         }
+
+        Spacer(modifier = Modifier.height(90.dp))
     }
 }
-
-

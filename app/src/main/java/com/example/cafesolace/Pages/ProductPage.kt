@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.cafesolace.CommonSection.Desserts
 import com.example.cafesolace.CommonSection.MainsCard
 
@@ -61,7 +62,7 @@ import com.example.cafesolace.Model.Round
 import com.example.cafesolace.R
 
 @Composable
-fun ProductScreen() {
+fun ProductScreen(navController: NavController) {
     val searchQuery = remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
@@ -169,6 +170,7 @@ fun ProductScreen() {
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .align(Alignment.Start)
+                    .padding(horizontal = 10.dp)
             )
 
             RoundedItermList(RoundedList = RoundedItems().loadRoundedItems())
@@ -186,13 +188,14 @@ fun ProductScreen() {
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .align(Alignment.Start)
+                    .padding(horizontal = 10.dp)
             )
 
 //           FooditemsList(foodList = FoodItems().loadFoodItems())
 //            Spacer(modifier = Modifier.height(10.dp))
 
 
-            MainspItermsList(MainspList = MainPItems().loadMainItems())
+            MainspItermsList(MainspList = MainPItems().loadMainItems(), navController = navController)
 
             Text(
                 text = "DESSERTS",
@@ -204,6 +207,7 @@ fun ProductScreen() {
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .align(Alignment.Start)
+                    .padding(horizontal = 10.dp)
             )
 
 
@@ -224,21 +228,22 @@ fun ProductScreen() {
 }
 
 @Composable
-fun MainsPIterm(MainsPictures: MainsP, modifier: Modifier) {
+fun MainsPIterm(MainsPictures: MainsP, modifier: Modifier, navController: NavController ) {
     MainsCard(
         imageResourceId = MainsPictures.imageResId,
         title = stringResource(id = MainsPictures.name),
         price = stringResource(id = MainsPictures.price),
-        backgroundColor = Color.White
+        backgroundColor = Color.White,
+        navController = navController,
     )
 }
 
 @Composable
-fun MainspItermsList(MainspList: List<MainsP>) {
+fun MainspItermsList(MainspList: List<MainsP>, navController: NavController) {
     val MainsplimitedFooditem = MainspList.take(6)
     LazyRow(modifier = Modifier.fillMaxWidth()) {
         items(MainsplimitedFooditem) { MainsItermsnew ->
-            MainsPIterm(MainsPictures = MainsItermsnew, modifier = Modifier.padding(9.dp))
+            MainsPIterm(MainsPictures = MainsItermsnew, modifier = Modifier.padding(9.dp), navController = navController)
 
         }
     }

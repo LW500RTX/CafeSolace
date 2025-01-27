@@ -58,7 +58,7 @@ fun Desserts(
                     .fillMaxWidth()
                     .shadow(
                         elevation = 8.dp,
-                        shape = RoundedCornerShape(10.dp), // Updated for more rounded corners
+                        shape = RoundedCornerShape(8.dp), // Updated for more rounded corners
                         ambientColor = Color.Black,
                         spotColor = Color.Black
                     ),

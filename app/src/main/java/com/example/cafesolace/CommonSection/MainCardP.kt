@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
 fun MainsCard(
@@ -30,14 +31,16 @@ fun MainsCard(
     price: String,
     backgroundColor: Color = Color.White,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    navController: NavController
+
 ) {
     Card(
         modifier = modifier
             .padding(horizontal = 8.dp, vertical = 8.dp) // Reduced padding slightly for compactness
             .width(170.dp)
             .height(190.dp) // Reduced height slightly to bring elements closer
-            .clickable { onClick() }
+            .clickable { navController.navigate("detailedProductView/$imageResourceId") }
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(8.dp),
@@ -58,7 +61,7 @@ fun MainsCard(
                     .fillMaxWidth()
                     .shadow(
                         elevation = 8.dp,
-                        shape = RoundedCornerShape(10.dp), // Updated for more rounded corners
+                        shape = RoundedCornerShape(8.dp), // Updated for more rounded corners
                         ambientColor = Color.Black,
                         spotColor = Color.Black
                     ),

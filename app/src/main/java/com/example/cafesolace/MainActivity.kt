@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.cafesolace.CommonSection.BottomNavigationScreen
 import com.example.cafesolace.CommonSection.MyAppNavigation
 import com.example.cafesolace.Pages.LoginPage
@@ -28,11 +29,12 @@ class MainActivity : ComponentActivity() {
         val authViewModel: AuthViewModel by viewModels()
         setContent {
             CafeSolaceTheme {
+                val navController = rememberNavController()
 //               MainScreen()
 //                ProductScreen()
 //                ProfilePage()
 //                WishlistPage()
-                BottomNavigationScreen()
+                BottomNavigationScreen(navController = navController)
 //                LoginPage()
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 //                    MyAppNavigation(
