@@ -83,7 +83,7 @@ fun MainScreen() {
                     text = buildAnnotatedString {
                         withStyle(
                             style = SpanStyle(
-                                color = Color(0xFFFF9800),
+                                MaterialTheme.colorScheme.tertiary,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 34.sp
                             )
@@ -92,7 +92,7 @@ fun MainScreen() {
                         }
                         withStyle(
                             style = SpanStyle(
-                                color = Color.Red,
+                                MaterialTheme.colorScheme.error,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 34.sp
                             )
@@ -223,7 +223,7 @@ fun CategoryButtons() {
                         .padding(horizontal = 4.dp), // Additional padding inside the button
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (selectedCategory.value == category) {
-                            Color(0xFFC99954) // Highlight color when selected
+                           MaterialTheme.colorScheme.inversePrimary // Highlight color when selected
                         } else {
                             Color(0xA4A26854) // Default background color
                         },
@@ -260,7 +260,7 @@ fun CoffeIterm(foodPictures: Main, modifier: Modifier) {
         imageResourceId = foodPictures.imageResId,
         title = stringResource(id = foodPictures.name),
         price = stringResource(id = foodPictures.price),
-        backgroundColor = Color.White
+        backgroundColor = MaterialTheme.colorScheme.surface
     )
 }
 
@@ -279,7 +279,7 @@ fun FooditemsList(foodList: List<Main>) {
 fun RoundedIterm(RoundedItermPictures: Round,modifier: Modifier) {
     RoundedItermCart(
         imageResourceId = RoundedItermPictures.imageResourceId,
-        backgroundColor = Color.White
+        backgroundColor = MaterialTheme.colorScheme.surface
     )
 }
 

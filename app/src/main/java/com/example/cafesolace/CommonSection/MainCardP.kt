@@ -77,8 +77,7 @@ fun MainsCard(
             Text(
                 text = "Rs $price",
                 fontSize = 16.sp,
-                color = Color.Black,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .fillMaxWidth()

@@ -106,7 +106,7 @@ fun ProductScreen(navController: NavController) {
                     text = buildAnnotatedString {
                         withStyle(
                             style = SpanStyle(
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 30.sp
                             )
@@ -148,16 +148,6 @@ fun ProductScreen(navController: NavController) {
 
 
 
-//            Image(
-//                painter = painterResource(R.drawable.bannermain),
-//                contentDescription = "Banner",
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(270.dp)
-//                    .padding(4.dp)
-//                    .clip(RoundedCornerShape(16.dp)),
-//                contentScale = ContentScale.Crop
-//            )
 
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -165,7 +155,7 @@ fun ProductScreen(navController: NavController) {
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = 18.sp, // Change font size
                     fontWeight = FontWeight.Bold, // Set font weight
-                    color = Color.Black // Set text color
+
                 ),
                 modifier = Modifier
                     .padding(vertical = 8.dp)
@@ -182,7 +172,7 @@ fun ProductScreen(navController: NavController) {
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = 18.sp, // Change font size
                     fontWeight = FontWeight.Bold, // Set font weight
-                    color = Color.Black // Set text color
+
                 ),
 
                 modifier = Modifier
@@ -190,9 +180,6 @@ fun ProductScreen(navController: NavController) {
                     .align(Alignment.Start)
                     .padding(horizontal = 10.dp)
             )
-
-//           FooditemsList(foodList = FoodItems().loadFoodItems())
-//            Spacer(modifier = Modifier.height(10.dp))
 
 
             MainspItermsList(MainspList = MainPItems().loadMainItems(), navController = navController)
@@ -202,7 +189,7 @@ fun ProductScreen(navController: NavController) {
                 style = MaterialTheme.typography.titleMedium.copy( // Modify the typography style
                     fontSize = 18.sp, // Change font size
                     fontWeight = FontWeight.Bold, // Set font weight
-                    color = Color.Black // Set text color
+
                 ),
                 modifier = Modifier
                     .padding(vertical = 8.dp)
@@ -233,7 +220,7 @@ fun MainsPIterm(MainsPictures: MainsP, modifier: Modifier, navController: NavCon
         imageResourceId = MainsPictures.imageResId,
         title = stringResource(id = MainsPictures.name),
         price = stringResource(id = MainsPictures.price),
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colorScheme.surface,
         navController = navController,
     )
 }
@@ -255,7 +242,7 @@ fun DessertPIterm(DessertPictures: DessertP, modifier: Modifier) {
         imageResourceId = DessertPictures.imageResId,
         title = stringResource(id = DessertPictures.name),
         price = stringResource(id = DessertPictures.price),
-        backgroundColor = Color.White
+        backgroundColor = MaterialTheme.colorScheme.surface
     )
 }
 

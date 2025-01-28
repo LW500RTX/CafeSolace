@@ -87,8 +87,8 @@ fun WishlistPage() {
             onClick = { clearWishlist() },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Red,   // Set button background color
-                contentColor = Color.White    // Set text color
+                containerColor = MaterialTheme.colorScheme.error,   // Set button background color
+//                contentColor = Color.White    // Set text color
             )
         ) {
             Text(text = "Clear Wishlist")

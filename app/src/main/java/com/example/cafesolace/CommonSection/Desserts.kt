@@ -41,10 +41,8 @@ fun Desserts(
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(8.dp),
-                ambientColor = Color.Black,
-                spotColor = Color.Black
             ),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier.padding(8.dp) // Added padding inside the column
@@ -59,8 +57,6 @@ fun Desserts(
                     .shadow(
                         elevation = 8.dp,
                         shape = RoundedCornerShape(8.dp), // Updated for more rounded corners
-                        ambientColor = Color.Black,
-                        spotColor = Color.Black
                     ),
             )
             Text(
@@ -74,7 +70,6 @@ fun Desserts(
             Text(
                 text = "Rs $price",
                 fontSize = 16.sp,
-                color = Color.Black,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier

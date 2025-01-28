@@ -46,10 +46,9 @@ fun FoodCard(
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(8.dp),
-                ambientColor = Color.Black,
-                spotColor = Color.Black
+
             ),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier.padding(8.dp) // Added padding inside the column
@@ -64,8 +63,6 @@ fun FoodCard(
                     .shadow(
                         elevation = 8.dp,
                         shape = RoundedCornerShape(8.dp), // Updated for more rounded corners
-                        ambientColor = Color.Black,
-                        spotColor = Color.Black
                     ),
             )
             Text(
@@ -79,8 +76,7 @@ fun FoodCard(
             Text(
                 text = "Rs $price",
                 fontSize = 16.sp,
-                color = Color.Black,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -98,14 +94,14 @@ fun FoodCard(
                     .align(Alignment.CenterHorizontally)
                     .border(
                         width = 2.dp, // Thickness of the border
-                        color = Color.Black, // Color of the border
+                        color = MaterialTheme.colorScheme.scrim, // Color of the border
                         shape = RoundedCornerShape(12.dp) // Rounded corners with 12.dp radius
                     )
             ) {
                 Text(
                     text = "Buy",
                     style = TextStyle(
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.scrim,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )

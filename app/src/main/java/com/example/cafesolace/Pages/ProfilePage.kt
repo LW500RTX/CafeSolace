@@ -60,7 +60,7 @@ fun ProfilePage() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(containerColor = Color.LightGray)
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceBright)
         ) {
             Column(
                 modifier = Modifier
@@ -174,8 +174,8 @@ fun ProfilePage() {
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Red,
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.error,
+//                contentColor = Color.White
             )
         ) {
             Text(text = "Logout")

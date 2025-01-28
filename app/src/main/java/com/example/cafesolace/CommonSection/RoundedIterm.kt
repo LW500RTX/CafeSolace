@@ -43,10 +43,8 @@ fun RoundedItermCart(
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(16.dp), // Updated for more rounded corners
-                ambientColor = Color.Black,
-                spotColor = Color.Black
             ),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
         shape = RoundedCornerShape(16.dp) // Apply the same rounded corners to the card
     ) {
         Column(
@@ -62,8 +60,7 @@ fun RoundedItermCart(
                     .shadow(
                         elevation = 8.dp,
                         shape = RoundedCornerShape(8.dp), // Updated for more rounded corners
-                        ambientColor = Color.Black,
-                        spotColor = Color.Black
+
                     ),
             )
         }
