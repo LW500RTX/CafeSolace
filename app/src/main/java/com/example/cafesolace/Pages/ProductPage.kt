@@ -66,6 +66,7 @@ fun ProductScreen(navController: NavController) {
     val searchQuery = remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
+
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
@@ -76,6 +77,7 @@ fun ProductScreen(navController: NavController) {
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
 //            Spacer(modifier = Modifier.height(26.dp))
 
@@ -210,7 +212,10 @@ fun ProductScreen(navController: NavController) {
 //                    .clip(RoundedCornerShape(16.dp)),
 //                contentScale = ContentScale.Crop
 //            )
+
+
         }
+
     }
 }
 
