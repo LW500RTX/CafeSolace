@@ -28,8 +28,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,6 +55,7 @@ import com.example.cafesolace.Model.Main
 import com.example.cafesolace.Model.Round
 import com.example.cafesolace.R
 import com.example.cafesolace.ui.theme.AuthViewModel
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -133,16 +137,16 @@ fun MainScreen() {
             Spacer(modifier = Modifier.height(10.dp))
 
             // Banner Section
-            Image(
-                painter = painterResource(R.drawable.bannermain),
-                contentDescription = "Banner",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .padding(4.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                contentScale = ContentScale.Crop
+            // Banner Section
+            BannerSlideshow(
+                bannerImages = listOf(
+                    R.drawable.bannermain, // Replace with your actual drawable resources
+                    R.drawable.banner4,
+                    R.drawable.banner3 // Add more banners as needed
+                ),
+                slideshowInterval = 3000L // Set the desired interval (e.g., 3000ms = 3 seconds)
             )
+
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -291,4 +295,33 @@ fun RoundedItermList(RoundedList: List <Round>){
             RoundedIterm( RoundedItermPictures = RoundedIterm, modifier = Modifier.padding(9.dp))
         }
     }
+}
+
+
+@Composable
+fun BannerSlideshow(
+    bannerImages: List<Int>, // List of drawable resource IDs
+    slideshowInterval: Long = 200L // Time between slides in milliseconds
+) {
+    // Track the current image index
+    var currentIndex by remember { mutableStateOf(0) }
+
+    // Automatically update the image index
+    LaunchedEffect(currentIndex) {
+        delay(slideshowInterval) // Wait for the specified interval
+        currentIndex = (currentIndex + 1) % bannerImages.size // Cycle through images
+    }
+
+    // Display the current banner
+    val currentBanner = painterResource(id = bannerImages[currentIndex])
+    Image(
+        painter = currentBanner,
+        contentDescription = "Banner Slideshow Image",
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(250.dp)
+            .padding(4.dp)
+            .clip(RoundedCornerShape(16.dp)),
+        contentScale = ContentScale.Crop
+    )
 }

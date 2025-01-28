@@ -1,5 +1,7 @@
 package com.example.cafesolace.CommonSection
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -29,45 +31,67 @@ import com.example.cafesolace.Pages.WishlistPage
 fun BottomNavigationScreen(modifier: Modifier = Modifier, navController: NavController) {
 
     val navItermList = listOf(
-        NavIterm("Home" , Icons.Default.Home),
-        NavIterm("Product" , Icons.Default.Search),
-        NavIterm("WishList" , Icons.Default.List),
-        NavIterm("Profile" , Icons.Default.Person),
-
+        NavIterm("Home", Icons.Default.Home),
+        NavIterm("Product", Icons.Default.Search),
+        NavIterm("WishList", Icons.Default.List),
+        NavIterm("Profile", Icons.Default.Person),
     )
-    var selectedIndex by remember {
-        mutableIntStateOf(0)
-    }
+    var selectedIndex by remember { mutableIntStateOf(0) }
 
-    Scaffold (modifier = Modifier.fillMaxSize(),
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
         bottomBar = {
             NavigationBar {
-               navItermList.forEachIndexed { index, navIterm ->
-                  NavigationBarItem(
-                      selected = selectedIndex == index,
-                      onClick = {
-                          selectedIndex = index
-                      },
-                      icon = {
-                          Icon(imageVector = navIterm.icon, contentDescription = "Icon")
-                      },
-                      label = {
-                          Text(text = navIterm.label)
-                      }
-                  )
-               }
+                navItermList.forEachIndexed { index, navIterm ->
+                    NavigationBarItem(
+                        selected = selectedIndex == index,
+                        onClick = {
+                            selectedIndex = index
+                        },
+                        icon = {
+                            Icon(imageVector = navIterm.icon, contentDescription = "Icon")
+                        },
+                        label = {
+                            Text(text = navIterm.label)
+                        }
+                    )
+                }
             }
         }
-        ){ innerPadding ->
-        contentScreen(modifier = Modifier.padding(innerPadding),selectedIndex, navController = navController)
+    ) { innerPadding ->
+        AnimatedContentScreen(
+            modifier = Modifier.padding(innerPadding),
+            selectedIndex = selectedIndex,
+            navController = navController
+        )
     }
 }
+
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun contentScreen (modifier: Modifier = Modifier,selectedIndex :Int, navController: NavController ) {
-when(selectedIndex){
-    0->MainScreen()
-    1->ProductScreen(navController = navController)
-    2->WishlistPage()
-    3-> ProfilePage()
-}
+fun AnimatedContentScreen(
+    modifier: Modifier = Modifier,
+    selectedIndex: Int,
+    navController: NavController
+) {
+    AnimatedContent(
+        targetState = selectedIndex,
+        transitionSpec = {
+            slideInHorizontally(
+                initialOffsetX = { if (targetState > initialState) it else -it },
+                animationSpec = tween(300)
+            ) + fadeIn(animationSpec = tween(300)) with
+                    slideOutHorizontally(
+                        targetOffsetX = { if (targetState > initialState) -it else it },
+                        animationSpec = tween(300)
+                    ) + fadeOut(animationSpec = tween(300))
+        }
+    ) { targetIndex ->
+        when (targetIndex) {
+            0 -> MainScreen()
+            1 -> ProductScreen(navController = navController)
+            2 -> WishlistPage()
+            3 -> ProfilePage()
+        }
+    }
 }

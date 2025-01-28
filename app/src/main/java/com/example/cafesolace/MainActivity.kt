@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.cafesolace.CommonSection.BottomNavigationScreen
 import com.example.cafesolace.CommonSection.MyAppNavigation
@@ -40,6 +42,7 @@ class MainActivity : ComponentActivity() {
 //                    MyAppNavigation(
 //                        modifier = Modifier.padding(innerPadding),
 //                        authViewModel = authViewModel
+
 //                    )
 //                }
             }
