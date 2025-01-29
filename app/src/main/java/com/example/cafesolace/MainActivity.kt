@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
 //               MainScreen()
 //                ProductScreen()
 //                ProfilePage()
-//                WishlistPage()
+//                WishlistPage()na
                 BottomNavigationScreen(navController = navController)
 //                LoginPage()
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
