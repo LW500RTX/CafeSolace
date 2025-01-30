@@ -26,9 +26,10 @@ import com.example.cafesolace.Pages.MainScreen
 import com.example.cafesolace.Pages.ProductScreen
 import com.example.cafesolace.Pages.ProfilePage
 import com.example.cafesolace.Pages.WishlistPage
+import com.example.cafesolace.ui.theme.AuthViewModel
 
 @Composable
-fun BottomNavigationScreen(modifier: Modifier = Modifier, navController: NavController) {
+fun BottomNavigationScreen(modifier: Modifier = Modifier,navController: NavController,authViewModel: AuthViewModel) {
 
     val navItermList = listOf(
         NavIterm("Home", Icons.Default.Home),
@@ -88,7 +89,7 @@ fun AnimatedContentScreen(
         }
     ) { targetIndex ->
         when (targetIndex) {
-            0 -> MainScreen()
+            0 -> MainScreen(navController)
             1 -> ProductScreen(navController = navController)
             2 -> WishlistPage()
             3 -> ProfilePage()

@@ -27,12 +27,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
 fun FoodCard(
     imageResourceId: Int,
     title: String,
     price: String,
+    navController: NavController,
     backgroundColor: Color = Color.White,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
@@ -84,7 +86,10 @@ fun FoodCard(
             )
             Spacer(modifier = Modifier.height(8.dp)) // Added a small spacer for better alignment
             Button(
-                onClick = onClick,
+                onClick = {
+                    // Navigate to Master2 screen
+                    navController.navigate("master2")
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFFFFFFF),
                     contentColor = Color.White

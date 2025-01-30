@@ -36,19 +36,21 @@ class MainActivity : ComponentActivity() {
 //                ProductScreen()
 //                ProfilePage()
 //                WishlistPage()na
-                BottomNavigationScreen(navController = navController)
+//                BottomNavigationScreen(modifier = )
 //                LoginPage()
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    MyAppNavigation(
-//                        modifier = Modifier.padding(innerPadding),
-//                        authViewModel = authViewModel
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    MyAppNavigation(
+                        modifier = Modifier.padding(innerPadding), authViewModel = authViewModel
+                    )
 
 //                    )
 //                }
-            }
+                }
 
+            }
         }
     }
 }
+
 
 

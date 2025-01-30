@@ -59,7 +59,7 @@ import kotlinx.coroutines.delay
 
 
 @Composable
-fun MainScreen() {
+fun MainScreen(navController:NavController) {
     val searchQuery = remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
@@ -166,7 +166,8 @@ fun MainScreen() {
             )
 
 
-            FooditemsList(foodList = FoodItems().loadFoodItems())
+            FooditemsList(foodList = FoodItems().loadFoodItems(), navController = navController)
+
             Spacer(modifier = Modifier.height(10.dp))
 
             // Signature Items Section
@@ -259,24 +260,27 @@ fun CategoryButtons() {
 
 
 @Composable
-fun CoffeIterm(foodPictures: Main, modifier: Modifier) {
+fun CoffeIterm(foodPictures: Main, modifier: Modifier, navController: NavController) {
     FoodCard(
         imageResourceId = foodPictures.imageResId,
         title = stringResource(id = foodPictures.name),
         price = stringResource(id = foodPictures.price),
+        navController = navController, // Pass navController here
         backgroundColor = MaterialTheme.colorScheme.surface
     )
 }
 
+
 @Composable
-fun FooditemsList(foodList: List<Main>) {
+fun FooditemsList(foodList: List<Main>, navController: NavController) {
     val limitedFooditem = foodList.take(5)
     LazyRow(modifier = Modifier.fillMaxWidth()) {
         items(limitedFooditem) { fooditem ->
-            CoffeIterm(foodPictures = fooditem, modifier = Modifier.padding(9.dp))
+            CoffeIterm(foodPictures = fooditem, modifier = Modifier.padding(9.dp), navController = navController)
         }
     }
 }
+
 
 
 @Composable
