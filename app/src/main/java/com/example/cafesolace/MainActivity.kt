@@ -14,6 +14,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.cafesolace.Authentication.AuthViewModel1
+import com.example.cafesolace.Authentication.MyAppNavigation1
 import com.example.cafesolace.CommonSection.BottomNavigationScreen
 import com.example.cafesolace.CommonSection.MyAppNavigation
 import com.example.cafesolace.Pages.LoginPage
@@ -28,7 +30,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val authViewModel: AuthViewModel by viewModels()
+//        val authViewModel: AuthViewModel by viewModels()
         setContent {
             CafeSolaceTheme {
                 val navController = rememberNavController()
@@ -39,9 +41,11 @@ class MainActivity : ComponentActivity() {
 //                BottomNavigationScreen(modifier = )
 //                LoginPage()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MyAppNavigation(
-                        modifier = Modifier.padding(innerPadding), authViewModel = authViewModel
-                    )
+//                    MyAppNavigation(
+//                        modifier = Modifier.padding(innerPadding), authViewModel = authViewModel
+//                    )
+                    val authViewModel1 :AuthViewModel1 by viewModels()
+                    MyAppNavigation1(modifier = Modifier.padding(innerPadding), authViewModel1 = authViewModel1)
 
 //                    )
 //                }

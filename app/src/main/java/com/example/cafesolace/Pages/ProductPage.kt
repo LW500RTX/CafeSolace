@@ -212,6 +212,19 @@ fun ProductScreen(navController: NavController) {
 //                    .clip(RoundedCornerShape(16.dp)),
 //                contentScale = ContentScale.Crop
 //            )
+            Image(
+                painter = painterResource(R.drawable.banner4),
+                contentDescription = "Banner11",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .padding(4.dp)
+                    .clip(RoundedCornerShape(16.dp)),
+                contentScale = ContentScale.Crop
+
+
+            )
+            Spacer(modifier = Modifier.height(90.dp))
 
 
         }

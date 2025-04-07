@@ -1,13 +1,18 @@
 package com.example.cafesolace.Pages
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,16 +22,42 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import com.example.cafesolace.Authentication.AuthState
+import com.example.cafesolace.Authentication.AuthViewModel1
 import com.example.cafesolace.R
 
 @Composable
-fun ProfilePage() {
-    var username by remember { mutableStateOf("Aloka Silva") }
-    var email by remember { mutableStateOf("Alokasilva@gmail.com") }
+fun ProfilePage(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    authViewModel1: AuthViewModel1
+) {
+    var username by remember { mutableStateOf("Lalan Weerasooriya") }
+    var email by remember { mutableStateOf("lalanweerasooriya@gmail.com") }
     var password by remember { mutableStateOf("password123") }
     var contact by remember { mutableStateOf("123-456-7890") }
     var isEditable by remember { mutableStateOf(false) }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val context = LocalContext.current
+    val pickImageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        imageUri = uri // Save the selected image URI
+    }
+
     val scrollState = rememberScrollState()
+    val authState = authViewModel1.authState.observeAsState()
+
+    LaunchedEffect(authState.value) {
+        when (authState.value) {
+            is AuthState.Unauthenticated -> navController.navigate("login")
+            else -> Unit
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -38,22 +69,27 @@ fun ProfilePage() {
         Spacer(modifier = Modifier.height(50.dp))
 
         // Profile Image
-        Image(
-            painter = painterResource(id = R.drawable.man),
-            contentDescription = "Profile Image",
-            modifier = Modifier
-                .size(180.dp)
-                .clip(CircleShape)
-                .border(2.dp, Color.Gray, CircleShape),
-            contentScale = ContentScale.Crop
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = username,
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.clickable { pickImageLauncher.launch("image/*") }
+        ) {
+            Image(
+                painter = if (imageUri != null) rememberAsyncImagePainter(imageUri)
+                else painterResource(id = R.drawable.man), // Default image
+                contentDescription = "Profile Image",
+                modifier = Modifier
+                    .size(180.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, Color.Gray, CircleShape),
+                contentScale = ContentScale.Crop
+            )
+        }
 
+        Text("")
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Username
+        Text(text = username, style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(26.dp))
 
         // Card with user details
@@ -170,18 +206,15 @@ fun ProfilePage() {
         // Logout Button
         Button(
             onClick = {
-                // Handle logout logic here
+                authViewModel1.signout() // Handle logout logic here
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error,
-//                contentColor = Color.White
             )
         ) {
             Text(text = "Logout")
         }
         Spacer(modifier = Modifier.height(90.dp))
     }
-
 }
-

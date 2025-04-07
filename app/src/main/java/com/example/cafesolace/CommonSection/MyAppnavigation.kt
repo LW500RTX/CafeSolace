@@ -1,6 +1,6 @@
 package com.example.cafesolace.CommonSection
 
-import Master2Screen
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
@@ -13,6 +13,7 @@ import com.example.cafesolace.Data.FoodItems
 import com.example.cafesolace.Model.Main
 import com.example.cafesolace.Pages.LoginPage
 import com.example.cafesolace.Pages.MainScreen
+import com.example.cafesolace.Pages.Master2Screen
 import com.example.cafesolace.Pages.SignupPage
 import com.example.cafesolace.Pages.detailviewPage
 import com.example.cafesolace.ui.theme.AuthViewModel
@@ -29,9 +30,9 @@ composable("login") {
             SignupPage(modifier,navController,authViewModel)
         }
 
-        composable("Bottomnavigation") {
-            BottomNavigationScreen(modifier,navController,authViewModel)
-        }
+//        composable("Bottomnavigation") {
+//            BottomNavigationScreen(modifier,navController,authViewModel)
+//        }
         composable("main") {  // Ensure this route exists
             MainScreen(navController) // Pass navController here
         }

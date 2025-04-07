@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.example.cafesolace.Authentication.AuthViewModel1
 import com.example.cafesolace.Model.NavIterm
 import com.example.cafesolace.Pages.MainScreen
 import com.example.cafesolace.Pages.ProductScreen
@@ -29,7 +30,7 @@ import com.example.cafesolace.Pages.WishlistPage
 import com.example.cafesolace.ui.theme.AuthViewModel
 
 @Composable
-fun BottomNavigationScreen(modifier: Modifier = Modifier,navController: NavController,authViewModel: AuthViewModel) {
+fun BottomNavigationScreen(modifier: Modifier = Modifier, navController: NavController, authViewModel1: AuthViewModel1) {
 
     val navItermList = listOf(
         NavIterm("Home", Icons.Default.Home),
@@ -63,7 +64,8 @@ fun BottomNavigationScreen(modifier: Modifier = Modifier,navController: NavContr
         AnimatedContentScreen(
             modifier = Modifier.padding(innerPadding),
             selectedIndex = selectedIndex,
-            navController = navController
+            navController = navController,
+            authViewModel1 = authViewModel1
         )
     }
 }
@@ -73,7 +75,8 @@ fun BottomNavigationScreen(modifier: Modifier = Modifier,navController: NavContr
 fun AnimatedContentScreen(
     modifier: Modifier = Modifier,
     selectedIndex: Int,
-    navController: NavController
+    navController: NavController,
+    authViewModel1: AuthViewModel1
 ) {
     AnimatedContent(
         targetState = selectedIndex,
@@ -92,7 +95,9 @@ fun AnimatedContentScreen(
             0 -> MainScreen(navController)
             1 -> ProductScreen(navController = navController)
             2 -> WishlistPage()
-            3 -> ProfilePage()
+            3 -> ProfilePage(authViewModel1= authViewModel1,navController=navController)
+
+
         }
     }
 }

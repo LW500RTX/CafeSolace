@@ -54,7 +54,6 @@ import com.example.cafesolace.FoodCard
 import com.example.cafesolace.Model.Main
 import com.example.cafesolace.Model.Round
 import com.example.cafesolace.R
-import com.example.cafesolace.ui.theme.AuthViewModel
 import kotlinx.coroutines.delay
 
 

@@ -104,7 +104,6 @@ fun MasterView(
                     text = stringResource(id = main.name),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 24.sp
                 )
 
 
@@ -120,7 +119,7 @@ fun MasterView(
                 )
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
-                    text = "John Doe",
+                    text = "Lalan Weerasooriy",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -132,7 +131,6 @@ fun MasterView(
                 text = "$${price}",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 20.sp
             )
 
             Spacer(modifier = Modifier.height(8.dp))
