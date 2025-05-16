@@ -30,9 +30,7 @@ composable("login") {
             SignupPage(modifier,navController,authViewModel)
         }
 
-//        composable("Bottomnavigation") {
-//            BottomNavigationScreen(modifier,navController,authViewModel)
-//        }
+
         composable("main") {  // Ensure this route exists
             MainScreen(navController) // Pass navController here
         }
@@ -50,8 +48,6 @@ composable("login") {
                 MasterView(main = it, navController = navController)
             }
         }
-//        composable("login") {
-//            MainScreen(modifier,navController,authViewModel)
-//        }
+
     })
 }
