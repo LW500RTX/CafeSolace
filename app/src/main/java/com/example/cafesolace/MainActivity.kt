@@ -5,56 +5,57 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.cafesolace.Authentication.AuthViewModel1
 import com.example.cafesolace.Authentication.MyAppNavigation1
-import com.example.cafesolace.CommonSection.BottomNavigationScreen
-import com.example.cafesolace.CommonSection.MyAppNavigation
-import com.example.cafesolace.Pages.LoginPage
-import com.example.cafesolace.Pages.MainScreen
-import com.example.cafesolace.Pages.ProductScreen
-import com.example.cafesolace.Pages.ProfilePage
-import com.example.cafesolace.Pages.WishlistPage
-import com.example.cafesolace.ui.theme.AuthViewModel
 import com.example.cafesolace.ui.theme.CafeSolaceTheme
+import kotlinx.coroutines.delay
+import java.time.LocalTime
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-//        val authViewModel: AuthViewModel by viewModels()
+
         setContent {
-            CafeSolaceTheme {
-                val navController = rememberNavController()
-//               MainScreen()
-//                ProductScreen()
-//                ProfilePage()
-//                WishlistPage()na
-//                BottomNavigationScreen(modifier = )
-//                LoginPage()
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    MyAppNavigation(
-//                        modifier = Modifier.padding(innerPadding), authViewModel = authViewModel
-//                    )
-                    val authViewModel1 :AuthViewModel1 by viewModels()
-                    MyAppNavigation1(modifier = Modifier.padding(innerPadding), authViewModel1 = authViewModel1)
+            val isDarkTheme = remember { mutableStateOf(isDarkModeTime()) }
 
-//                    )
-//                }
+            // Periodically check time every minute
+            LaunchedEffect(Unit) {
+                while (true) {
+                    isDarkTheme.value = isDarkModeTime()
+                    delay(60000) // 1 minute
                 }
+            }
 
+            CafeSolaceTheme(darkTheme = isDarkTheme.value) {
+                val navController = rememberNavController()
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val authViewModel1: AuthViewModel1 by viewModels()
+                    MyAppNavigation1(
+                        modifier = Modifier.padding(innerPadding),
+                        authViewModel1 = authViewModel1
+                    )
+                }
             }
         }
     }
+
+    private fun isDarkModeTime(): Boolean {
+        val now = LocalTime.now()
+        val start = LocalTime.of(17, 0) // 5:00 PM
+        val end = LocalTime.of(5, 0)   // 5:00 AM
+
+        return if (start < end) {
+            now >= start && now < end
+        } else {
+            now >= start || now < end
+        }
+    }
 }
-
-
-

@@ -182,7 +182,7 @@ fun ProfilePage(
 
         // Internet connectivity status
         Text(
-            text = "Connection: ${connectionStatus.name}",
+            text = "Internet  Connection: ${connectionStatus.name}",
             style = MaterialTheme.typography.bodyLarge,
             color = when (connectionStatus) {
                 ConnectionStatus.Available -> Color.Green
