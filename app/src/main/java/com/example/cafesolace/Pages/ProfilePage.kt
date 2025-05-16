@@ -1,6 +1,8 @@
 package com.example.cafesolace.Pages
 
+import android.content.ContentValues
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -17,12 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.cafesolace.Authentication.AuthState
@@ -43,16 +44,39 @@ fun ProfilePage(
     var contact by remember { mutableStateOf("123-456-7890") }
     var isEditable by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
-    val pickImageLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        imageUri = uri // Save the selected image URI
-    }
-
     val scrollState = rememberScrollState()
     val authState = authViewModel1.authState.observeAsState()
+
+    // Camera image URI holder
+    val cameraImageUri = remember { mutableStateOf<Uri?>(null) }
+
+    // Gallery launcher
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let { imageUri = it }
+    }
+
+    // Camera launcher
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            imageUri = cameraImageUri.value
+        }
+    }
+
+    fun createImageUri(): Uri? {
+        val contentResolver = context.contentResolver
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "profile_image_${System.currentTimeMillis()}.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+        return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+    }
 
     // Connectivity observer setup
     val connectivityObserver = remember { ConnectivityObserver(context) }
@@ -83,7 +107,7 @@ fun ProfilePage(
         // Profile Image
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.clickable { pickImageLauncher.launch("image/*") }
+            modifier = Modifier.clickable { showDialog = true }
         ) {
             Image(
                 painter = if (imageUri != null) rememberAsyncImagePainter(imageUri)
@@ -96,6 +120,63 @@ fun ProfilePage(
                 contentScale = ContentScale.Crop
             )
         }
+
+        // Image Picker Dialog
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = {
+                    Text(
+                        text = "Select Image Source",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                },
+                text = {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Button(
+                            onClick = {
+                                showDialog = false
+                                val uri = createImageUri()
+                                cameraImageUri.value = uri
+                                uri?.let { cameraLauncher.launch(it) }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = Color.White
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text("Camera")
+                        }
+
+                        Button(
+                            onClick = {
+                                showDialog = false
+                                galleryLauncher.launch("image/*")
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.secondary,
+                                contentColor = Color.White
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text("Gallery")
+                        }
+                    }
+                },
+                confirmButton = {},
+                dismissButton = {}
+            )
+        }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -231,7 +312,7 @@ fun ProfilePage(
         // Logout Button
         Button(
             onClick = {
-                authViewModel1.signout() // Handle logout logic here
+                authViewModel1.signout()
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
