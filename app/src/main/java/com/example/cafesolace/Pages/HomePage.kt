@@ -56,7 +56,6 @@ import com.example.cafesolace.Model.Round
 import com.example.cafesolace.R
 import kotlinx.coroutines.delay
 
-
 @Composable
 fun MainScreen(navController:NavController) {
     val searchQuery = remember { mutableStateOf("") }
@@ -136,7 +135,6 @@ fun MainScreen(navController:NavController) {
             Spacer(modifier = Modifier.height(10.dp))
 
             // Banner Section
-            // Banner Section
             BannerSlideshow(
                 bannerImages = listOf(
                     R.drawable.bannermain, // Replace with your actual drawable resources
@@ -147,10 +145,10 @@ fun MainScreen(navController:NavController) {
             )
 
 
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // Category Buttons Section
-            CategoryButtons()
+//            Spacer(modifier = Modifier.height(10.dp))
+//
+//            // Category Buttons Section
+//            CategoryButtons()
 
             Spacer(modifier = Modifier.height(10.dp))
 

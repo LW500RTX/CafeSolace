@@ -27,6 +27,8 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.cafesolace.Authentication.AuthState
 import com.example.cafesolace.Authentication.AuthViewModel1
+import com.example.cafesolace.CommonSection.ConnectivityObserver
+import com.example.cafesolace.CommonSection.ConnectionStatus
 import com.example.cafesolace.R
 
 @Composable
@@ -52,10 +54,20 @@ fun ProfilePage(
     val scrollState = rememberScrollState()
     val authState = authViewModel1.authState.observeAsState()
 
+    // Connectivity observer setup
+    val connectivityObserver = remember { ConnectivityObserver(context) }
+    val connectionStatus by connectivityObserver.connectionStatus.collectAsState()
+
     LaunchedEffect(authState.value) {
         when (authState.value) {
             is AuthState.Unauthenticated -> navController.navigate("login")
             else -> Unit
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            connectivityObserver.unregisterCallback()
         }
     }
 
@@ -85,8 +97,21 @@ fun ProfilePage(
             )
         }
 
-        Text("")
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Internet connectivity status
+        Text(
+            text = "Connection: ${connectionStatus.name}",
+            style = MaterialTheme.typography.bodyLarge,
+            color = when (connectionStatus) {
+                ConnectionStatus.Available -> Color.Green
+                ConnectionStatus.Losing -> Color.Yellow
+                ConnectionStatus.Lost, ConnectionStatus.Unavailable -> Color.Red
+            },
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Username
         Text(text = username, style = MaterialTheme.typography.headlineSmall)
@@ -215,6 +240,7 @@ fun ProfilePage(
         ) {
             Text(text = "Logout")
         }
+
         Spacer(modifier = Modifier.height(90.dp))
     }
 }
