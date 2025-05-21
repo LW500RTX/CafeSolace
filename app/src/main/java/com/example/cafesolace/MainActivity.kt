@@ -1,14 +1,22 @@
 package com.example.cafesolace
 
+import android.content.Context
+import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +34,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        // Ensure full edge-to-edge content
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+
+        // Request permission if not granted
+        if (!Settings.System.canWrite(this)) {
+            val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS).apply {
+                data = Uri.parse("package:$packageName")
+            }
+            startActivity(intent)
+        }
 
         setContent {
             val isDarkTheme = remember { mutableStateOf(isDarkModeTime()) }
@@ -44,10 +60,13 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val authViewModel1: AuthViewModel1 by viewModels()
 
+                // Brightness controller using ambient light
+                AmbientLightBrightnessController(context = this)
+
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
-                        .systemBarsPadding(), // Push content below status bar without gap
+                        .systemBarsPadding()
                 ) { innerPadding ->
                     Box(
                         modifier = Modifier
@@ -69,7 +88,7 @@ class MainActivity : ComponentActivity() {
 
     private fun isDarkModeTime(): Boolean {
         val now = LocalTime.now()
-        val start = LocalTime.of(17, 0)
+        val start = LocalTime.of(23, 0)
         val end = LocalTime.of(5, 0)
         return if (start < end) {
             now >= start && now < end
@@ -77,6 +96,56 @@ class MainActivity : ComponentActivity() {
             now >= start || now < end
         }
     }
+}
+
+@Composable
+fun AmbientLightBrightnessController(context: Context) {
+    val lux = AmbientLightSensorValue(context)
+
+    val brightness = remember(lux) {
+        // Map lux to brightness (0 - 255)
+        val mapped = (lux / 10000f * 255).toInt().coerceIn(30, 255)
+        mapped
+    }
+
+    LaunchedEffect(brightness) {
+        if (Settings.System.canWrite(context)) {
+            Settings.System.putInt(
+                context.contentResolver,
+                Settings.System.SCREEN_BRIGHTNESS,
+                brightness
+            )
+        }
+    }
+}
+
+@Composable
+fun AmbientLightSensorValue(context: Context): Float {
+    var lightLevel by remember { mutableStateOf(0f) }
+
+    val sensorManager = remember {
+        context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
+    val lightSensor = remember {
+        sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+    }
+
+    DisposableEffect(lightSensor) {
+        val listener = object : SensorEventListener {
+            override fun onSensorChanged(event: SensorEvent) {
+                lightLevel = event.values[0] // ambient light in lux
+            }
+
+            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+        }
+        sensorManager.registerListener(listener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
+
+        onDispose {
+            sensorManager.unregisterListener(listener)
+        }
+    }
+
+    return lightLevel
 }
 
 @Composable
@@ -94,10 +163,12 @@ fun WeatherSuggestionDialog(navController: NavHostController) {
                 drinkEmoji = "\u2744️"
                 "It's hot today! Would you like a cold drink?"
             }
+
             temperature < 20 -> {
                 drinkEmoji = "\u2615"
                 "It's chilly today! How about a hot drink?"
             }
+
             else -> {
                 drinkEmoji = "\uD83C\uDF7A"
                 "The weather is pleasant. Pick what you like!"

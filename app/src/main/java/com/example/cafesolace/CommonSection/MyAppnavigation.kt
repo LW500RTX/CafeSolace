@@ -38,16 +38,16 @@ composable("login") {
             Master2Screen(navController)
         }
 
-        composable(
-            route = "detailedProductView/{imageResId}",
-            arguments = listOf(navArgument("imageResId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val imageResId = backStackEntry.arguments?.getInt("imageResId")
-            val product = FoodItems().loadFoodItems().find { it.imageResId == imageResId }
-            product?.let {
-                MasterView(main = it, navController = navController)
-            }
-        }
+//        composable(
+//            route = "detailedProductView/{imageResId}",
+//            arguments = listOf(navArgument("imageResId") { type = NavType.IntType })
+//        ) { backStackEntry ->
+//            val imageResId = backStackEntry.arguments?.getInt("imageResId")
+//            val product = FoodItems().loadFoodItems().find { it.imageResId == imageResId }
+//            product?.let {
+//                MasterView(main = it, navController = navController)
+//            }
+//        }
 
     })
 }

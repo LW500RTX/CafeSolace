@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">CafeSolace</string>
 
-
     <!-- Item Names -->
     <string name="item_espresso">Espresso</string>
     <string name="item_latte">Latte</string>
@@ -15,8 +14,6 @@
     <string name="price_cappuccino">450.00</string>
     <string name="price_mocha">500.00</string>
     <string name="price_macchiato">650.00</string>
-
-
 
 
     <!--MainsP Item Names -->
@@ -33,8 +30,6 @@
     <string name="Bangers_and_Mash_Price">1450.00</string>
     <string name="Fish_and_Chips_Price">2400.00</string>
     <string name="Ham_and_Cheese_Price">1650.00</string>
-
-
 
 
     <!-- Dessert Item Names -->

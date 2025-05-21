@@ -1,0 +1,14 @@
+[
+  {
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/house%2001.jpg?alt=media&token=4db3129c-1d93-4e0d-9e81-71708f49bcfd",
+    "name": "Cosmic Artwork",
+    "price": 39.99,
+    "description": "captures the serene and mysterious beauty of the cosmos. The artwork portrays a vast expanse of deep, velvety darkness punctuated by countless twinkling stars."
+  },
+  {
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/yourapp.appspot.com/o/image2.jpg?alt=media",
+    "name": "Coffee Mug",
+    "price": 15.0,
+    "description": "A cozy mug to start your day right."
+  }
+]

@@ -1,5 +1,8 @@
 package com.example.cafesolace.Pages
 
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.example.cafesolace.CommonSection.RoundedItermCart
 import com.example.cafesolace.Data.FoodItems
@@ -326,3 +330,4 @@ fun BannerSlideshow(
         contentScale = ContentScale.Crop
     )
 }
+

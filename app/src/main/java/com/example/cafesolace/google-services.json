@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "795458317613",
+    "project_id": "cafesolace-1",
+    "storage_bucket": "cafesolace-1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795458317613:android:855f13faba3f068d0ff7a4",
+        "android_client_info": {
+          "package_name": "com.example.cafesolace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN5Tt53BAtyvTYMrepzFX6s6_HDxaqWTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

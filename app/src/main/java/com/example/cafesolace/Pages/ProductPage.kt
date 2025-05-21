@@ -81,21 +81,21 @@ fun ProductScreen(navController: NavController) {
         ) {
 //            Spacer(modifier = Modifier.height(26.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(1.dp),
-                horizontalArrangement = Arrangement.End, // Align to the right
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = { /* Handle view cart logic */ },
-                    modifier = Modifier.size(36.dp)
-                ) {
-                    Icon(Icons.Filled.ShoppingCart, contentDescription = "View Cart")
-                }
-            }
-            Spacer(modifier = Modifier.height(4.dp))
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(1.dp),
+//                horizontalArrangement = Arrangement.End, // Align to the right
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                IconButton(
+//                    onClick = { /* Handle view cart logic */ },
+//                    modifier = Modifier.size(36.dp)
+//                ) {
+//                    Icon(Icons.Filled.ShoppingCart, contentDescription = "View Cart")
+//                }
+//            }
+//            Spacer(modifier = Modifier.height(4.dp))
 
             Row(
                 modifier = Modifier

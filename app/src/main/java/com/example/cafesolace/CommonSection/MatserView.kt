@@ -18,9 +18,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,7 +58,8 @@ fun MasterView(
         startAnimation = true
     }
     val context = LocalContext.current
-
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
     val offsetX by animateDpAsState(
         targetValue = if (startAnimation) 0.dp else 3000.dp,
         animationSpec = tween(durationMillis = 400)
@@ -71,123 +73,120 @@ fun MasterView(
             .fillMaxSize()
             .offset(y = offsetX)
             .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(35.dp))
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .padding(vertical = 12.dp),
+                .padding(vertical = 12.dp)
+                .horizontalScroll(rememberScrollState()), // horizontal scroll here
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.Start
         ) {
-            Spacer(modifier = Modifier.height(35.dp))
+            Spacer(modifier = Modifier.width(35.dp))
 
             // Product Image
             Image(
                 painter = painterResource(id = main.imageResId),
                 contentDescription = stringResource(id = main.name),
                 modifier = Modifier
-                    .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-                    .height(250.dp),
+                    .height(250.dp)
+                    .width(250.dp),
                 contentScale = ContentScale.Crop
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
             ) {
                 Text(
-                    text = stringResource(id = main.name),
+                    text = name,
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
 
+                Spacer(modifier = Modifier.height(8.dp))
 
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(
-                    text = "by",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Spacer(modifier = Modifier.width(2.dp))
-                Text(
-                    text = "Lalan Weerasooriy",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "$${price}",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "captures the serene and mysterious beauty of the cosmos. The artwork portrays a vast expanse of deep, velvety darkness punctuated by countless twinkling stars.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                (1..5).forEach { index ->
-                    Icon(
-                        imageVector = if (index < rating) Icons.Filled.Star else Icons.Outlined.Star,
-                        contentDescription = "Star Rating",
-                        tint = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clickable {
-                                rating = index
-                            }
+                Row {
+                    Text(
+                        text = "by",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Text(
+                        text = "Lalan Weerasooriy",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextButton(onClick = { if (quantity > 1) quantity-- }) {
-                    Text(text = "-", fontSize = 24.sp)
-                }
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "$quantity",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.onBackground
+                    text = "$${price}",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
 
-                TextButton(onClick = { quantity++ }) {
-                    Text(text = "+", fontSize = 24.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "captures the serene and mysterious beauty of the cosmos. The artwork portrays a vast expanse of deep, velvety darkness punctuated by countless twinkling stars.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    (1..5).forEach { index ->
+                        Icon(
+                            imageVector = if (index <= rating) Icons.Filled.Star else Icons.Outlined.Star,
+                            contentDescription = "Star Rating",
+                            tint = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clickable {
+                                    rating = index
+                                }
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                    }
                 }
 
-                Spacer(modifier = Modifier.width(10.dp))
-            }
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextButton(onClick = { if (quantity > 1) quantity-- }) {
+                        Text(text = "-", fontSize = 24.sp)
+                    }
+
+                    Text(
+                        text = "$quantity",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
+                    TextButton(onClick = { quantity++ }) {
+                        Text(text = "+", fontSize = 24.sp)
+                    }
+
+                    Spacer(modifier = Modifier.width(10.dp))
+                }
+            }
         }
     }
-
 }
