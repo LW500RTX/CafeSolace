@@ -25,8 +25,13 @@ import com.example.cafesolace.Authentication.AuthViewModel1
 import com.example.cafesolace.Model.NavIterm
 import com.example.cafesolace.Pages.MainScreen
 import com.example.cafesolace.Pages.ProductScreen
-import com.example.cafesolace.Pages.ProfilePage
+
+
+
 import com.example.cafesolace.Pages.WishlistPage
+import com.example.cafesolace.Screens.ProfilePage
+
+
 import com.example.cafesolace.ui.theme.AuthViewModel
 
 @Composable

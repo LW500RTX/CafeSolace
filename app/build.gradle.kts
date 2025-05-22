@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.animation.core.lint)
 
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
     // Firebase BOM manages versions of all Firebase libraries below
     implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
 
