@@ -1,5 +1,6 @@
 package com.example.cafesolace.Pages
 
+import android.content.Context
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
@@ -14,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,15 +28,50 @@ import com.example.cafesolace.Data.RoundedItems
 import com.example.cafesolace.Pages.RoundedItermList
 import com.example.cafesolace.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
+
+suspend fun fetchJsonFromUrl(url: String): String? = withContext(Dispatchers.IO) {
+    try {
+        val client = OkHttpClient()
+        val request = Request.Builder().url(url).build()
+        val response = client.newCall(request).execute()
+        if (response.isSuccessful) {
+            response.body?.string()
+        } else null
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+suspend fun loadRemoteStrings(): Map<String, String> {
+    val jsonString = fetchJsonFromUrl("https://raw.githubusercontent.com/LW500RTX/CafeSolaceJsonData/refs/heads/main/strings.json")
+    return if (jsonString != null) {
+        val jsonObject = JSONObject(jsonString)
+        val map = mutableMapOf<String, String>()
+        jsonObject.keys().forEach { key ->
+            map[key] = jsonObject.getString(key)
+        }
+        map
+    } else emptyMap()
+}
 
 @Composable
 fun Master2Screen(navController: NavController) {
+    val context = LocalContext.current
+    val strings = remember { mutableStateOf<Map<String, String>>(emptyMap()) }
+
     var quantity by remember { mutableStateOf(1) }
     var isSpicy by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
     var isVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
+        strings.value = loadRemoteStrings()
         isVisible = true
     }
 
@@ -47,20 +84,17 @@ fun Master2Screen(navController: NavController) {
     ) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { navController.popBackStack() }) {
-                Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Go Back")
+                Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = strings.value["back_button_description"] ?: "Go Back")
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Animated Image Entry
         AnimatedVisibility(
             visible = isVisible,
             enter = fadeIn(animationSpec = tween(5000)) + scaleIn(initialScale = 0.8f)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.capuchino),
-                contentDescription = "Chicken Burger",
+                contentDescription = strings.value["image_description"] ?: "Image",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
@@ -71,30 +105,42 @@ fun Master2Screen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Animated Text
         AnimatedVisibility(
             visible = isVisible,
             enter = slideInVertically(initialOffsetY = { 900 }) + fadeIn()
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Cafe Solace", color = Color(0xFFDAA520), fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = strings.value["brand_name"] ?: "Cafe Solace",
+                    color = Color(0xFFDAA520),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Espresso", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = strings.value["product_name"] ?: "Espresso",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "⭐ 4.9", fontSize = 18.sp, color = Color(0xFFFFA500))
+                    Text(
+                        text = strings.value["rating_text"] ?: "⭐ 4.9",
+                        fontSize = 18.sp,
+                        color = Color(0xFFFFA500)
+                    )
                 }
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Description with Slide-in Animation
         AnimatedVisibility(
             visible = isVisible,
             enter = slideInHorizontally(initialOffsetX = { -100 }) + fadeIn()
         ) {
             Text(
-                text = "At cafe Solace, we believe in more than just coffee—we craft moments of peace, comfort, and connection.",
+                text = strings.value["description_text"]
+                    ?: "At Cafe Solace, we believe in more than just coffee—we craft moments of peace, comfort, and connection.",
                 fontSize = 16.sp,
                 color = Color.Black,
                 modifier = Modifier
@@ -105,14 +151,13 @@ fun Master2Screen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Signature Items with Fade-in
         AnimatedVisibility(
             visible = isVisible,
             enter = fadeIn(animationSpec = tween(4200))
         ) {
             Column {
                 Text(
-                    text = "Our Signature Items",
+                    text = strings.value["signature_items_title"] ?: "Our Signature Items",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
@@ -122,20 +167,22 @@ fun Master2Screen(navController: NavController) {
                         .align(Alignment.Start)
                         .padding(horizontal = 10.dp)
                 )
-
                 RoundedItermList(RoundedList = RoundedItems().loadRoundedItems())
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Whipped Cream Toggle with Scale-in
         AnimatedVisibility(
             visible = isVisible,
             enter = scaleIn(initialScale = 0.8f) + fadeIn()
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Whipped Cream", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = strings.value["toggle_label"] ?: "Whipped Cream",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
                 Switch(
                     checked = isSpicy,
                     onCheckedChange = { isSpicy = it },
@@ -146,7 +193,6 @@ fun Master2Screen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Quantity Controls with Button Press Animation
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
@@ -174,7 +220,6 @@ fun Master2Screen(navController: NavController) {
                 Text("+")
             }
 
-            // Reset scale after animation
             LaunchedEffect(quantity) {
                 delay(1150)
                 scale = 1f
@@ -183,7 +228,6 @@ fun Master2Screen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Add to Cart Button with Fade-in
         AnimatedVisibility(
             visible = isVisible,
             enter = fadeIn(animationSpec = tween(800))
@@ -194,24 +238,27 @@ fun Master2Screen(navController: NavController) {
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Add to Cart - Rs. 600", color = Color.White, fontSize = 18.sp)
+                Text(
+                    text = strings.value["add_to_cart_button"] ?: "Add to Cart - Rs. 600",
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
             }
         }
     }
 
-    // Confirmation Dialog
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text(text = "Confirm Add to Cart") },
-            text = { Text("Are you sure you want to add this item to your cart?") },
+            title = { Text(text = strings.value["dialog_title"] ?: "Confirm Add to Cart") },
+            text = { Text(strings.value["dialog_text"] ?: "Are you sure you want to add this item to your cart?") },
             confirmButton = {
                 Button(
                     onClick = {
                         showDialog = false
                     }
                 ) {
-                    Text("Yes")
+                    Text(strings.value["dialog_confirm"] ?: "Yes")
                 }
             },
             dismissButton = {
@@ -220,7 +267,7 @@ fun Master2Screen(navController: NavController) {
                         showDialog = false
                     }
                 ) {
-                    Text("No")
+                    Text(strings.value["dialog_cancel"] ?: "No")
                 }
             }
         )

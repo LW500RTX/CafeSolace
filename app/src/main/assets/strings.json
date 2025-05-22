@@ -1,0 +1,88 @@
+{
+  "app_name": "CafeSolace",
+
+  "ui_strings": {
+    "back_button_description": "Go Back",
+    "image_description": "Chicken Burger",
+    "brand_name": "Cafe Solace",
+    "product_name": "Espresso",
+    "rating_text": "⭐ 4.9",
+    "description_text": "At cafe Solace, we believe in more than just coffee—we craft moments of peace, comfort, and connection.",
+    "signature_items_title": "Our Signature Items",
+    "toggle_label": "Whipped Cream",
+    "add_to_cart_button": "Add to Cart - Rs. 600",
+    "dialog_title": "Confirm Add to Cart",
+    "dialog_text": "Are you sure you want to add this item to your cart?",
+    "dialog_confirm": "Yes",
+    "dialog_cancel": "No"
+  },
+
+  "items": {
+    "espresso": {
+      "name": "Espresso",
+      "price": "700.00"
+    },
+    "latte": {
+      "name": "Latte",
+      "price": "790.00"
+    },
+    "cappuccino": {
+      "name": "Cappuccino",
+      "price": "450.00"
+    },
+    "mocha": {
+      "name": "Mocha",
+      "price": "500.00"
+    },
+    "macchiato": {
+      "name": "Macchiato",
+      "price": "650.00"
+    }
+  },
+
+  "mains": {
+    "italian_cuisine": {
+      "name": "Italian Cuisine",
+      "price": "3400.00"
+    },
+    "margherita_pizza": {
+      "name": "Margherita Pizza",
+      "price": "2700.00"
+    },
+    "bangers_and_mash": {
+      "name": "Bangers and Mash",
+      "price": "1450.00"
+    },
+    "fish_and_chips": {
+      "name": "Fish and Chips",
+      "price": "2400.00"
+    },
+    "ham_and_cheese": {
+      "name": "Ham and Cheese",
+      "price": "1650.00"
+    }
+  },
+
+  "desserts": {
+    "cap_cakes": {
+      "name": "Cap cakes",
+      "price": "200.00"
+    },
+    "raspberry_tart": {
+      "name": "Raspberry Tart",
+      "price": "700.00"
+    },
+    "ice_cream_bowl": {
+      "name": "Ice Cream Bowl",
+      "price": "450.00"
+    },
+    "macarons": {
+      "name": "Macarons",
+      "price": "350.00"
+    },
+    "berry_with_whipped_cream_cake": {
+      "name": "Berry With Whipped Cream Cake",
+      "price": "650.00"
+    }
+  }
+}

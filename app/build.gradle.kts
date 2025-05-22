@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.animation.core.lint)
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
