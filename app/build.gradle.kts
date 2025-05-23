@@ -59,9 +59,10 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.animation.core.lint)
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
-
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("org.json:json:20220320")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-
+    implementation("androidx.compose.material:material-icons-extended:<version>")
     // Firebase BOM manages versions of all Firebase libraries below
     implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
 

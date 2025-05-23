@@ -30,6 +30,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -61,7 +62,7 @@ import com.example.cafesolace.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun MainScreen(navController:NavController) {
+fun MainScreen(navController: NavController) {
     val searchQuery = remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
@@ -81,7 +82,7 @@ fun MainScreen(navController:NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
-                .padding(horizontal = 10.dp),
+                    .padding(horizontal = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -108,12 +109,12 @@ fun MainScreen(navController:NavController) {
                     }
                 )
 
-                IconButton(
-                    onClick = { /* Handle view cart logic */ },
-                    modifier = Modifier.size(36.dp)
-                ) {
-                    Icon(Icons.Filled.ShoppingCart, contentDescription = "View Cart")
-                }
+//                IconButton(
+//                    onClick = { /* Handle view cart logic */ },
+//                    modifier = Modifier.size(36.dp)
+//                ) {
+//                    Icon(Icons.Filled.ShoppingCart, contentDescription = "View Cart")
+//                }
             }
 
             // Search Box Section
@@ -148,7 +149,6 @@ fun MainScreen(navController:NavController) {
                 slideshowInterval = 3000L // Set the desired interval (e.g., 3000ms = 3 seconds)
             )
 
-
 //            Spacer(modifier = Modifier.height(10.dp))
 //
 //            // Category Buttons Section
@@ -156,16 +156,36 @@ fun MainScreen(navController:NavController) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Featured Items Section
-            Text(
-                text = "Featured Items",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold,fontSize = 20.sp), // Apply bold style
+            // Featured Items Section with "Show More" button
+            Row(
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .align(Alignment.Start)
-                    .padding(horizontal = 10.dp)
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Featured Items",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                )
 
+                TextButton(
+                    onClick = {
+                        // TODO: Add your onClick action here, e.g., navigate to full list screen
+                        navController.navigate("DessertScreen")
+                    }
+                ) {
+                    Text(
+                        text = "Show More",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
+                }
+            }
 
             FooditemsList(foodList = FoodItems().loadFoodItems(), navController = navController)
 
@@ -202,8 +222,6 @@ fun MainScreen(navController:NavController) {
             Spacer(modifier = Modifier.height(90.dp))
         }
     }
-
-
 }
 
 @Composable
@@ -229,7 +247,7 @@ fun CategoryButtons() {
                         .padding(horizontal = 4.dp), // Additional padding inside the button
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (selectedCategory.value == category) {
-                           MaterialTheme.colorScheme.inversePrimary // Highlight color when selected
+                            MaterialTheme.colorScheme.inversePrimary // Highlight color when selected
                         } else {
                             Color(0xA4A26854) // Default background color
                         },
@@ -257,9 +275,6 @@ fun CategoryButtons() {
     }
 }
 
-
-
-
 @Composable
 fun CoffeIterm(foodPictures: Main, modifier: Modifier, navController: NavController) {
     FoodCard(
@@ -271,7 +286,6 @@ fun CoffeIterm(foodPictures: Main, modifier: Modifier, navController: NavControl
     )
 }
 
-
 @Composable
 fun FooditemsList(foodList: List<Main>, navController: NavController) {
     val limitedFooditem = foodList.take(5)
@@ -282,10 +296,8 @@ fun FooditemsList(foodList: List<Main>, navController: NavController) {
     }
 }
 
-
-
 @Composable
-fun RoundedIterm(RoundedItermPictures: Round,modifier: Modifier) {
+fun RoundedIterm(RoundedItermPictures: Round, modifier: Modifier) {
     RoundedItermCart(
         imageResourceId = RoundedItermPictures.imageResourceId,
         backgroundColor = MaterialTheme.colorScheme.surface
@@ -293,15 +305,14 @@ fun RoundedIterm(RoundedItermPictures: Round,modifier: Modifier) {
 }
 
 @Composable
-fun RoundedItermList(RoundedList: List <Round>){
+fun RoundedItermList(RoundedList: List<Round>) {
     val limitedRoundedIterms = RoundedList.take(5)
-    LazyRow (modifier = Modifier.fillMaxWidth()){
-        items(limitedRoundedIterms) {RoundedIterm ->
-            RoundedIterm( RoundedItermPictures = RoundedIterm, modifier = Modifier.padding(9.dp))
+    LazyRow(modifier = Modifier.fillMaxWidth()) {
+        items(limitedRoundedIterms) { RoundedIterm ->
+            RoundedIterm(RoundedItermPictures = RoundedIterm, modifier = Modifier.padding(9.dp))
         }
     }
 }
-
 
 @Composable
 fun BannerSlideshow(
@@ -330,4 +341,3 @@ fun BannerSlideshow(
         contentScale = ContentScale.Crop
     )
 }
-

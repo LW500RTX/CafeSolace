@@ -60,6 +60,33 @@ suspend fun loadRemoteStrings(): Map<String, String> {
     } else emptyMap()
 }
 
+
+suspend fun loadLocalStrings(context: Context): Map<String, String> = withContext(Dispatchers.IO) {
+    try {
+        val inputStream = context.assets.open("strings.json")
+        val jsonString = inputStream.bufferedReader().use { it.readText() }
+        val jsonObject = JSONObject(jsonString)
+        val map = mutableMapOf<String, String>()
+        jsonObject.keys().forEach { key -> map[key] = jsonObject.getString(key) }
+        map
+    } catch (e: Exception) {
+        e.printStackTrace()
+        emptyMap()
+    }
+}
+
+suspend fun loadStringsWithFallback(context: Context): Map<String, String> {
+    val remoteStrings = loadRemoteStrings()
+    return if (remoteStrings.isEmpty()) {
+        loadLocalStrings(context)
+    } else {
+        remoteStrings
+    }
+}
+
+
+
+
 @Composable
 fun Master2Screen(navController: NavController) {
     val context = LocalContext.current
@@ -71,9 +98,10 @@ fun Master2Screen(navController: NavController) {
     var isVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        strings.value = loadRemoteStrings()
+        strings.value = loadStringsWithFallback(context)
         isVisible = true
     }
+
 
     Column(
         modifier = Modifier

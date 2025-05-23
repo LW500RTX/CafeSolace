@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.cafesolace.CommonSection.BottomNavigationScreen
+import com.example.cafesolace.Pages.DessertScreen
 import com.example.cafesolace.Pages.MainScreen
 import com.example.cafesolace.Pages.Master2Screen
 
@@ -29,11 +30,14 @@ fun MyAppNavigation1(
         composable("home") {
             BottomNavigationScreen(modifier, navController, authViewModel1)
         }
-        composable("main") {
+        composable("MainScreen") {
             MainScreen(navController)
         }
         composable("master2") {
             Master2Screen(navController)
+        }
+        composable("DessertScreen") {
+            DessertScreen(navController)
         }
     }
 }
