@@ -67,6 +67,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
 
     // Firebase dependencies WITHOUT versions
+    implementation("com.google.firebase:firebase-storage-ktx:20.2.0")
+    implementation("com.google.firebase:firebase-auth-ktx:22.1.0")
+    implementation("com.google.firebase:firebase-bom:32.1.1")
+    implementation("io.coil-kt:coil-compose:2.3.0")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
 

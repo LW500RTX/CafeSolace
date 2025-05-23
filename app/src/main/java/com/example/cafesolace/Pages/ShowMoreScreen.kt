@@ -2,7 +2,6 @@ package com.example.cafesolace.Pages
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -19,30 +18,34 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.cafesolace.R
 import kotlinx.coroutines.delay
 
-data class Dessert(val name: String, val price: String, val imageRes: Int)
+// Updated Dessert model to use imageUrl instead of imageRes
+data class Dessert(val name: String, val price: String, val imageUrl: String)
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun DessertScreen(navController: NavController) {
+    // Replace these URLs with your actual Firebase Storage image URLs
     val desserts = listOf(
-        Dessert("Espresso", "Rs.700.00", R.drawable.capuchino),
-        Dessert("Latte", "Rs.790.00", R.drawable.latte01),
-        Dessert("Cappuccino", "Rs.450.00", R.drawable.caffeine),
-        Dessert("Mocha", "Rs.500.00", R.drawable.mocha),
-        Dessert("Latte new", "Rs.800.00", R.drawable.latte25),
-        Dessert("Coffee", "Rs.200.00", R.drawable.a),
-        Dessert("Mango Juice", "Rs.300.00", R.drawable.b),
-        Dessert("Faluda", "Rs.570.00", R.drawable.c),
+        Dessert("Espresso", "Rs.700.00", "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/expressso.jpg?alt=media&token=063cb27a-5a18-4085-b606-f419a007ef13"),
+        Dessert("Latte", "Rs.790.00", "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/latte25.jpg?alt=media&token=7721df46-b3f4-4d28-b798-3a17e8a50abd"),
+        Dessert("Cappuccino", "Rs.450.00", "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/capuchino.jpg?alt=media&token=f8fc6e3d-f822-4d8d-a47a-792610b06c63"),
+        Dessert("Mocha", "Rs.500.00", "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/mocha.jpg?alt=media&token=6c231ce3-f947-4cdf-b79d-004610a47b50"),
+        Dessert("Latte new", "Rs.800.00", "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/latte01.jpg?alt=media&token=a6f99063-6421-4e30-afb7-bc0d8e347607"),
+        Dessert("Coffee", "Rs.200.00", "https://firebasestorage.googleapis.com/v0/b/your-app-id.appspot.com/o/coffee.jpg?alt=media"),
+        Dessert("Mango Juice", "Rs.300.00", "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/b.jpg?alt=media&token=2d82756b-9520-49fb-9fd2-39b74c2ff0ca"),
+        Dessert("Faluda", "Rs.570.00", "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/c.png?alt=media&token=15a628b5-9692-4d92-a9eb-9d4bc4783c6e")
     )
 
     var searchQuery by remember { mutableStateOf("") }
@@ -145,13 +148,15 @@ fun DessertCard(dessert: Dessert) {
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(id = dessert.imageRes),
+            AsyncImage(
+                model = dessert.imageUrl,
                 contentDescription = dessert.name,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.z),
+                error = painterResource(R.drawable.a)
             )
             Text(dessert.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
             Text(dessert.price, fontSize = 14.sp)
