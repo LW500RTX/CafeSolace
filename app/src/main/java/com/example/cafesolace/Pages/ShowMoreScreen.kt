@@ -35,20 +35,24 @@ data class Dessert(val name: String, val price: String, val imageRes: Int)
 @Composable
 fun DessertScreen(navController: NavController) {
     val desserts = listOf(
-        Dessert("Cupcakes", "$16.99", R.drawable.cupcakes),
-        Dessert("Raspberry Tart", "$16.99", R.drawable.macarons),
-        Dessert("Ice Cream Bowl", "$16.99", R.drawable.macarons),
-        Dessert("Macarons", "$16.99", R.drawable.macarons),
-        Dessert("Ice Cream Bowl", "$16.99", R.drawable.macarons),
-        Dessert("Ice Cream Bowl", "$16.99", R.drawable.macarons),
-        Dessert("Ice Cream Bowl", "$16.99", R.drawable.macarons),
-        Dessert("Ice Cream Bowl", "$16.99", R.drawable.macarons),
+        Dessert("Espresso", "Rs.700.00", R.drawable.capuchino),
+        Dessert("Latte", "Rs.790.00", R.drawable.latte01),
+        Dessert("Cappuccino", "Rs.450.00", R.drawable.caffeine),
+        Dessert("Mocha", "Rs.500.00", R.drawable.mocha),
+        Dessert("Latte new", "Rs.800.00", R.drawable.latte25),
+        Dessert("Coffee", "Rs.200.00", R.drawable.a),
+        Dessert("Mango Juice", "Rs.300.00", R.drawable.b),
+        Dessert("Faluda", "Rs.570.00", R.drawable.c),
     )
+
+    var searchQuery by remember { mutableStateOf("") }
+    val filteredDesserts = desserts.filter {
+        it.name.contains(searchQuery, ignoreCase = true)
+    }
 
     var searchBarVisible by remember { mutableStateOf(false) }
     var cardsVisible by remember { mutableStateOf(false) }
 
-    // Launch animations after composition
     LaunchedEffect(Unit) {
         delay(100)
         searchBarVisible = true
@@ -67,7 +71,7 @@ fun DessertScreen(navController: NavController) {
                         animationSpec = tween(durationMillis = 300)
                     ) + fadeIn(animationSpec = tween(300))
                 ) {
-                    SearchBar(navController)
+                    SearchBar(query = searchQuery, onQueryChanged = { searchQuery = it })
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -78,7 +82,7 @@ fun DessertScreen(navController: NavController) {
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(desserts) { dessert ->
+                    items(filteredDesserts) { dessert ->
                         AnimatedVisibility(
                             visible = cardsVisible,
                             enter = fadeIn(animationSpec = tween(300)) +
@@ -97,7 +101,7 @@ fun DessertScreen(navController: NavController) {
 @Composable
 fun DessertTopBar(navController: NavController) {
     TopAppBar(
-        title = { Text("DESSERTS") },
+        title = { Text("TRENDING") },
         navigationIcon = {
             IconButton(onClick = { navController.navigate("MainScreen") }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -111,11 +115,12 @@ fun DessertTopBar(navController: NavController) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(navController: NavController) {
+fun SearchBar(query: String, onQueryChanged: (String) -> Unit) {
     TextField(
-        value = "",
-        onValueChange = {},
+        value = query,
+        onValueChange = onQueryChanged,
         placeholder = { Text("Search") },
         leadingIcon = {
             Icon(Icons.Default.Search, contentDescription = "Search Icon")
@@ -124,7 +129,9 @@ fun SearchBar(navController: NavController) {
             .fillMaxWidth()
             .padding(8.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(Color(0xFFDDE4FF))
+            .background(Color(0xFFDDE4FF)),
+        singleLine = true,
+        colors = TextFieldDefaults.textFieldColors(containerColor = Color(0xFFDDE4FF))
     )
 }
 
