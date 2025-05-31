@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -24,15 +23,21 @@ fun SignUpPage1(
     navController: NavController,
     authViewModel1: AuthViewModel1
 ) {
+    // State holders for user input fields
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
+
+    // Observe the authentication state from the ViewModel
     val authState = authViewModel1.authState.observeAsState()
     val context = LocalContext.current
 
+    // React to changes in the authentication state
     LaunchedEffect(authState.value) {
         when (authState.value) {
+            // If authenticated, navigate to home screen
             is AuthState.Authenticated -> navController.navigate("home")
+            // If error occurs, show a toast message with the error
             is AuthState.Error -> Toast.makeText(
                 context,
                 (authState.value as AuthState.Error).message,
@@ -42,6 +47,7 @@ fun SignUpPage1(
         }
     }
 
+    // Outer container with gradient background and center alignment
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -52,19 +58,23 @@ fun SignUpPage1(
             ),
         contentAlignment = Alignment.Center
     ) {
+        // Card container for signup form with rounded corners and elevation
         Card(
             modifier = Modifier.padding(24.dp),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp)
         ) {
+            // Vertical column to layout form fields and buttons
             Column(
                 modifier = Modifier.padding(24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Title text
                 Text(text = "Sign Up", fontSize = 32.sp, color = Color(0xFF333333))
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Email input field
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -75,6 +85,7 @@ fun SignUpPage1(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // Password input field with password masking
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -86,6 +97,7 @@ fun SignUpPage1(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // Phone number input field (optional, but included in UI)
                 OutlinedTextField(
                     value = phoneNumber,
                     onValueChange = { phoneNumber = it },
@@ -96,9 +108,10 @@ fun SignUpPage1(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Button to trigger sign-up action via ViewModel
                 Button(
                     onClick = { authViewModel1.signup(email, password) },
-                    enabled = authState.value != AuthState.Loading,
+                    enabled = authState.value != AuthState.Loading, // Disable while loading
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -106,6 +119,7 @@ fun SignUpPage1(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Text button to navigate back to login screen
                 TextButton(onClick = { navController.navigate("login") }) {
                     Text(text = "Already have an account? Log in", color = Color(0xFF1976D2))
                 }

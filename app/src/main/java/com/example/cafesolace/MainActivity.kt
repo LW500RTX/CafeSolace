@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
@@ -46,12 +47,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalTime
 
+// MainActivity - Entry point of the app
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Enable edge-to-edge content (draw behind system bars)
         enableEdgeToEdge()
+        // Disable default system window fitting to use edge-to-edge properly
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        // Request permission to modify system settings (e.g., screen brightness)
         if (!Settings.System.canWrite(this)) {
             val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS).apply {
                 data = Uri.parse("package:$packageName")
@@ -59,39 +65,49 @@ class MainActivity : ComponentActivity() {
             startActivity(intent)
         }
 
+        // Set the Compose UI content
         setContent {
+            // Mutable state for whether dark theme is enabled based on time
             val isDarkTheme = remember { mutableStateOf(isDarkModeTime()) }
 
+            // Update the theme every minute by checking the time
             LaunchedEffect(Unit) {
                 while (true) {
                     isDarkTheme.value = isDarkModeTime()
-                    delay(60000)
+                    delay(60000) // Delay 1 minute
                 }
             }
 
+            // Apply the app theme (dark or light)
             CafeSolaceTheme(darkTheme = isDarkTheme.value) {
-                val navController = rememberNavController()
-                val authViewModel1: AuthViewModel1 by viewModels()
+                val navController = rememberNavController() // Navigation controller for Compose Navigation
+                val authViewModel1: AuthViewModel1 by viewModels() // ViewModel for Authentication
 
+                // Control screen brightness based on ambient light sensor
                 AmbientLightBrightnessController(context = this@MainActivity)
 
+                // Scaffold provides basic layout structure with padding for system bars
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
                         .systemBarsPadding()
                 ) { innerPadding ->
+                    // Box container for navigation, dialogs, and chatbot widget
                     Box(
                         modifier = Modifier
                             .padding(innerPadding)
                             .consumeWindowInsets(innerPadding)
                             .fillMaxSize()
                     ) {
+                        // Main app navigation composable, handling app screens
                         MyAppNavigation1(
                             modifier = Modifier.fillMaxSize(),
                             authViewModel1 = authViewModel1,
                             navController = navController
                         )
+                        // Show weather-based drink suggestion dialog
                         WeatherSuggestionDialog(navController = navController)
+                        // Floating chatbot widget
                         ChatBotWidget()
                     }
                 }
@@ -99,10 +115,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // Helper function to decide if dark mode should be enabled based on time
     private fun isDarkModeTime(): Boolean {
         val now = LocalTime.now()
-        val start = LocalTime.of(17, 0)
-        val end = LocalTime.of(5, 0)
+        val start = LocalTime.of(17, 0) // 5 PM
+        val end = LocalTime.of(5, 0)    // 5 AM
+        // Return true if current time is between 5 PM and 5 AM (overnight)
         return if (start < end) {
             now >= start && now < end
         } else {
@@ -111,11 +129,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// Composable controlling screen brightness according to ambient light sensor
 @Composable
 fun AmbientLightBrightnessController(context: Context) {
+    // Collect ambient light sensor values as a StateFlow
     val lux by AmbientLightSensorValue(context).collectAsState(initial = 0f)
+    // Convert lux to a brightness value between 30 and 255
     val brightness = (lux / 10000f * 255).toInt().coerceIn(30, 255)
 
+    // Side effect to update system screen brightness whenever brightness changes
     LaunchedEffect(brightness) {
         if (Settings.System.canWrite(context)) {
             Settings.System.putInt(
@@ -127,13 +149,15 @@ fun AmbientLightBrightnessController(context: Context) {
     }
 }
 
+// Composable that returns a StateFlow of ambient light sensor values (lux)
 @Composable
 fun AmbientLightSensorValue(context: Context): StateFlow<Float> {
-    val luxFlow = MutableStateFlow(0f)
+    val luxFlow = MutableStateFlow(0f) // Mutable state for light sensor readings
     val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     val lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
 
     DisposableEffect(Unit) {
+        // SensorEventListener to update luxFlow on sensor changes
         val listener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
                 luxFlow.value = event.values[0]
@@ -141,57 +165,100 @@ fun AmbientLightSensorValue(context: Context): StateFlow<Float> {
 
             override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
         }
+        // Register the listener with normal delay
         sensorManager.registerListener(listener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
+
+        // Unregister listener when composable leaves composition
         onDispose { sensorManager.unregisterListener(listener) }
     }
 
-    return luxFlow.asStateFlow()
+    return luxFlow.asStateFlow() // Return immutable StateFlow
 }
 
+// Composable that returns a StateFlow of ambient temperature sensor values (°C)
+@Composable
+fun AmbientTemperatureSensorValue(context: Context): StateFlow<Float> {
+    val tempFlow = MutableStateFlow(0f) // Mutable state for temperature readings
+    val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    val tempSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+
+    DisposableEffect(Unit) {
+        // SensorEventListener to update tempFlow on sensor changes
+        val listener = object : SensorEventListener {
+            override fun onSensorChanged(event: SensorEvent) {
+                tempFlow.value = event.values[0]
+            }
+
+            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+        }
+
+        // Register listener only if temperature sensor exists
+        if (tempSensor != null) {
+            sensorManager.registerListener(listener, tempSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+
+        // Unregister listener when composable leaves composition
+        onDispose {
+            if (tempSensor != null) {
+                sensorManager.unregisterListener(listener)
+            }
+        }
+    }
+
+    return tempFlow.asStateFlow() // Return immutable StateFlow
+}
+
+// Composable to display a weather-based drink suggestion dialog
 @Composable
 fun WeatherSuggestionDialog(navController: NavHostController) {
-    var showDialog by remember { mutableStateOf(false) }
-    var suggestion by remember { mutableStateOf("") }
-    var drinkEmoji by remember { mutableStateOf("") }
-    val temperature = 31.0
+    val context = LocalContext.current
+    // Collect ambient temperature value from sensor, default to 25°C
+    val temperature by AmbientTemperatureSensorValue(context).collectAsState(initial = 25f)
 
-    LaunchedEffect(Unit) {
-        delay(3000L)
+    // State to control whether dialog is visible
+    var showDialog by remember { mutableStateOf(false) }
+    var suggestion by remember { mutableStateOf("") } // Suggestion message text
+    var drinkEmoji by remember { mutableStateOf("") } // Emoji icon for suggestion
+
+    // Show the dialog 3 seconds after temperature updates
+    LaunchedEffect(temperature) {
+        delay(3000L) // 3 seconds delay
+        // Determine suggestion and emoji based on temperature ranges
         suggestion = when {
             temperature > 28 -> {
-                drinkEmoji = "\u2744️"
+                drinkEmoji = "\u2744️" // Snowflake emoji
                 "It's hot today! Would you like a cold drink?"
             }
-
             temperature < 20 -> {
-                drinkEmoji = "\u2615"
+                drinkEmoji = "\u2615" // Hot beverage emoji
                 "It's chilly today! How about a hot drink?"
             }
-
             else -> {
-                drinkEmoji = "\uD83C\uDF7A"
+                drinkEmoji = "\uD83C\uDF7A" // Beer mug emoji
                 "The weather is pleasant. Pick what you like!"
             }
         }
-        showDialog = true
+        showDialog = true // Show the dialog
     }
 
+    // Show AlertDialog when showDialog is true
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    // Animate emoji transition
                     Crossfade(targetState = drinkEmoji) { emoji ->
                         Text(emoji, style = MaterialTheme.typography.headlineMedium)
                     }
                     Text("Drink Suggestion")
                 }
             },
-            text = { Text(suggestion) },
+            text = { Text(suggestion) }, // Suggestion message text
             confirmButton = {
                 TextButton(onClick = {
                     showDialog = false
-                    navController.navigate("master2")
+                    navController.navigate("master2") // Navigate to drink selection screen
                 }) {
                     Text("Choose a Drink")
                 }
@@ -205,111 +272,11 @@ fun WeatherSuggestionDialog(navController: NavHostController) {
     }
 }
 
+// Composable implementing a draggable floating ChatBot widget
 @Composable
 fun ChatBotWidget() {
-    var isExpanded by remember { mutableStateOf(false) }
-    val chatMessages = remember { mutableStateListOf("Cafe Solace Ai: Hi there! How can I help you today?") }
-    var currentInput by remember { mutableStateOf("") }
-    val scope = rememberCoroutineScope()
-    var offset by remember { mutableStateOf(Offset(8f, 00f)) }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        if (isExpanded) {
-            Surface(
-                modifier = Modifier
-                    .offset { offset.toIntOffset() }
-                    .pointerInput(Unit) {
-                        detectDragGestures { change, dragAmount ->
-                            change.consume()
-                            offset += dragAmount
-                        }
-                    }
-                    .width(300.dp)
-                    .height(400.dp)
-                    .padding(16.dp),
-                shape = RoundedCornerShape(16.dp),
-                tonalElevation = 8.dp,
-                shadowElevation = 8.dp,
-                color = MaterialTheme.colorScheme.surface
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .verticalScroll(rememberScrollState())
-                            .padding(bottom = 8.dp)
-                    ) {
-                        for (msg in chatMessages) {
-                            Text(msg, modifier = Modifier.padding(vertical = 4.dp))
-                        }
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                        TextField(
-                            value = currentInput,
-                            onValueChange = { currentInput = it },
-                            modifier = Modifier.weight(1f),
-                            placeholder = { Text("Ask me anything") },
-                            maxLines = 3,
-                            singleLine = false,
-                        )
-                        IconButton(onClick = {
-                            if (currentInput.isNotBlank()) {
-                                chatMessages.add("You: $currentInput")
-                                val inputCopy = currentInput
-                                currentInput = ""
-                                scope.launch(Dispatchers.IO) {
-                                    val botResponse = fakeChatBotResponse(inputCopy)
-                                    launch(Dispatchers.Main) {
-                                        chatMessages.add("Bot: $botResponse")
-                                    }
-                                }
-                            }
-                        }) {
-                            Icon(Icons.Default.Send, contentDescription = "Send")
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    TextButton(onClick = { isExpanded = false }) {
-                        Icon(Icons.Default.Close, contentDescription = "Close")
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Close")
-                    }
-                }
-            }
-        } else {
-            FloatingActionButton(
-                onClick = { isExpanded = true },
-                modifier = Modifier
-                    .offset { offset.toIntOffset() }
-                    .pointerInput(Unit) {
-                        detectDragGestures { change, dragAmount ->
-                            change.consume()
-                            offset += dragAmount
-                        }
-                    }
-                    .padding(16.dp),
-                shape = RoundedCornerShape(50)
-            ) {
-                Icon(Icons.Default.ChatBubble, contentDescription = "Chat Bot")
-            }
-        }
+    var isExpanded by remember { mutableStateOf(false) } // Whether the chat window is expanded
+    val chatMessages = remember {
+        mutableStateListOf("Cafe Solace Ai: Hi there! How can I")
     }
 }
-
-suspend fun fakeChatBotResponse(input: String): String {
-    delay(1000)
-    return when {
-        "coffee" in input.lowercase() -> "How about trying our signature espresso today?"
-        "tea" in input.lowercase() -> "We have a refreshing mint tea. Would you like to try it?"
-        "cold" in input.lowercase() -> "Our iced latte is a perfect choice!"
-        else -> "That's interesting! Can you tell me more?"
-    }
-}
-
-private fun Offset.toIntOffset() = IntOffset(x.toInt(), y.toInt())

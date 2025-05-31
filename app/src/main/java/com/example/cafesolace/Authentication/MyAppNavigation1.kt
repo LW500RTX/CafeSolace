@@ -14,28 +14,35 @@ import com.example.cafesolace.Pages.Master2Screen
 fun MyAppNavigation1(
     modifier: Modifier = Modifier,
     authViewModel1: AuthViewModel1,
-    navController: NavHostController // Use NavHostController here
+    navController: NavHostController // Navigation controller to handle navigation between screens
 ) {
+    // NavHost defines the navigation graph of the app
     NavHost(
         navController = navController,
-        startDestination = "login",
+        startDestination = "login", // Set the starting screen of the app
         modifier = modifier
     ) {
+        // Composable destination for the login screen
         composable("login") {
             LoginPage1(modifier, navController, authViewModel1)
         }
+        // Composable destination for the signup screen
         composable("signup") {
             SignUpPage1(modifier, navController, authViewModel1)
         }
+        // Composable destination for the home screen with bottom navigation
         composable("home") {
             BottomNavigationScreen(modifier, navController, authViewModel1)
         }
+        // Composable destination for MainScreen page
         composable("MainScreen") {
             MainScreen(navController)
         }
+        // Composable destination for Master2Screen page
         composable("master2") {
             Master2Screen(navController)
         }
+        // Composable destination for DessertScreen page
         composable("DessertScreen") {
             DessertScreen(navController)
         }

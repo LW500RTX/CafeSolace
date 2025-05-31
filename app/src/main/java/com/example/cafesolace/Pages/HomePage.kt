@@ -63,21 +63,25 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun MainScreen(navController: NavController) {
+    // State to hold the text entered in the search field
     val searchQuery = remember { mutableStateOf("") }
+
+    // Scroll state for vertical scrolling of the entire screen content
     val scrollState = rememberScrollState()
 
+    // Scaffold provides the basic screen structure
     Scaffold(
-        modifier = Modifier.fillMaxSize() // Ensures full screen coverage
-    ) { paddingValues ->
+        modifier = Modifier.fillMaxSize() // Fill entire available screen space
+    ) { paddingValues ->  // paddingValues accounts for system bars, navigation, etc.
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues) // Using paddingValues for content padding
-                .verticalScroll(scrollState),
+                .padding(paddingValues) // Apply scaffold's padding
+                .verticalScroll(scrollState), // Enable vertical scrolling
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Welcome Text with "Cafe" and "Solace" styled separately and Cart icon on the right
+            // Top header row: "Cafe Solace" text with two colors, and cart icon placeholder
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -86,6 +90,7 @@ fun MainScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Build styled text with "Cafe" and "Solace" differently colored
                 Text(
                     text = buildAnnotatedString {
                         withStyle(
@@ -109,15 +114,10 @@ fun MainScreen(navController: NavController) {
                     }
                 )
 
-//                IconButton(
-//                    onClick = { /* Handle view cart logic */ },
-//                    modifier = Modifier.size(36.dp)
-//                ) {
-//                    Icon(Icons.Filled.ShoppingCart, contentDescription = "View Cart")
-//                }
+                // You can add a Cart IconButton here if needed (currently not present)
             }
 
-            // Search Box Section
+            // Search input box section with leading search icon
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -125,38 +125,33 @@ fun MainScreen(navController: NavController) {
             ) {
                 OutlinedTextField(
                     value = searchQuery.value,
-                    onValueChange = { searchQuery.value = it },
+                    onValueChange = { searchQuery.value = it },  // Update searchQuery state on input
                     label = { Text("Search") },
                     leadingIcon = {
                         Icon(Icons.Filled.Search, contentDescription = "Search Icon")
                     },
-                    shape = RoundedCornerShape(26.dp),
+                    shape = RoundedCornerShape(26.dp), // Rounded corners for the text field
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.Center)
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp)) // Spacer for vertical space
 
-            // Banner Section
+            // Banner slideshow showing promotional images
             BannerSlideshow(
                 bannerImages = listOf(
-                    R.drawable.bannermain, // Replace with your actual drawable resources
+                    R.drawable.bannermain, // Drawable resources for banner images
                     R.drawable.banner4,
-                    R.drawable.banner3 // Add more banners as needed
+                    R.drawable.banner3
                 ),
-                slideshowInterval = 3000L // Set the desired interval (e.g., 3000ms = 3 seconds)
+                slideshowInterval = 3000L // 3 seconds interval for slideshow
             )
-
-//            Spacer(modifier = Modifier.height(10.dp))
-//
-//            // Category Buttons Section
-//            CategoryButtons()
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Featured Items Section with "Show More" button
+            // Section title row for Featured Items with "Show More" button on the right
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -172,9 +167,9 @@ fun MainScreen(navController: NavController) {
                     )
                 )
 
+                // Button to navigate to the full Dessert screen on click
                 TextButton(
                     onClick = {
-                        // TODO: Add your onClick action here, e.g., navigate to full list screen
                         navController.navigate("DessertScreen")
                     }
                 ) {
@@ -187,16 +182,17 @@ fun MainScreen(navController: NavController) {
                 }
             }
 
+            // Horizontal list of featured food items (limited to 5)
             FooditemsList(foodList = FoodItems().loadFoodItems(), navController = navController)
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Signature Items Section
+            // Section title for Signature Items
             Text(
                 text = "Our Signature Items",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp // Set the desired font size here
+                    fontSize = 20.sp
                 ),
                 modifier = Modifier
                     .padding(vertical = 8.dp)
@@ -204,9 +200,12 @@ fun MainScreen(navController: NavController) {
                     .padding(horizontal = 10.dp)
             )
 
+            // Horizontal list of rounded style signature items
             RoundedItermList(RoundedList = RoundedItems().loadRoundedItems())
+
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Large promotional banner image with rounded corners
             Image(
                 painter = painterResource(R.drawable.banner11),
                 contentDescription = "Banner11",
@@ -216,48 +215,49 @@ fun MainScreen(navController: NavController) {
                     .padding(4.dp)
                     .clip(RoundedCornerShape(16.dp)),
                 contentScale = ContentScale.Crop
-
-
             )
-            Spacer(modifier = Modifier.height(90.dp))
+
+            Spacer(modifier = Modifier.height(90.dp)) // Extra space at the bottom
         }
     }
 }
 
+// Category buttons for filtering (Coffee, Mains, Desserts)
 @Composable
 fun CategoryButtons() {
-    // State to keep track of the selected category
+    // Track which category is selected
     val selectedCategory = remember { mutableStateOf<String?>(null) }
 
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 18.dp), // Padding for the entire LazyRow
+            .padding(horizontal = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(28.dp) // Increased space between buttons
+        horizontalArrangement = Arrangement.spacedBy(28.dp) // Spacing between buttons
     ) {
+        // Loop through the category list and create buttons
         items(listOf("Coffee", "Mains", "Desserts")) { category ->
             Box {
                 OutlinedButton(
                     onClick = {
-                        selectedCategory.value = category // Update the selected category
+                        selectedCategory.value = category // Update selected category on click
                     },
                     modifier = Modifier
                         .height(50.dp)
-                        .padding(horizontal = 4.dp), // Additional padding inside the button
+                        .padding(horizontal = 4.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (selectedCategory.value == category) {
-                            MaterialTheme.colorScheme.inversePrimary // Highlight color when selected
+                            MaterialTheme.colorScheme.inversePrimary // Highlight selected button
                         } else {
-                            Color(0xA4A26854) // Default background color
+                            Color(0xA4A26854) // Default background for unselected buttons
                         },
                         contentColor = if (selectedCategory.value == category) {
-                            MaterialTheme.colorScheme.onSecondaryContainer // Text color for selected
+                            MaterialTheme.colorScheme.onSecondaryContainer // Text color when selected
                         } else {
-                            MaterialTheme.colorScheme.tertiaryContainer // Text color for unselected
+                            MaterialTheme.colorScheme.tertiaryContainer // Text color unselected
                         }
                     ),
-                    border = null // Remove or customize the border
+                    border = null // No border
                 ) {
                     Text(
                         text = category,
@@ -266,8 +266,8 @@ fun CategoryButtons() {
                         } else {
                             MaterialTheme.colorScheme.onErrorContainer // Text color for unselected
                         },
-                        fontSize = 16.sp, // Custom font size
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold) // Bold text style
+                        fontSize = 16.sp,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
             }
@@ -275,20 +275,22 @@ fun CategoryButtons() {
     }
 }
 
+// Composable to display a single Coffee item using FoodCard
 @Composable
 fun CoffeIterm(foodPictures: Main, modifier: Modifier, navController: NavController) {
     FoodCard(
         imageResourceId = foodPictures.imageResId,
         title = stringResource(id = foodPictures.name),
         price = stringResource(id = foodPictures.price),
-        navController = navController, // Pass navController here
+        navController = navController, // For navigation on clicking the food item card
         backgroundColor = MaterialTheme.colorScheme.surface
     )
 }
 
+// Horizontal list of featured food items (limited to 5)
 @Composable
 fun FooditemsList(foodList: List<Main>, navController: NavController) {
-    val limitedFooditem = foodList.take(5)
+    val limitedFooditem = foodList.take(5) // Show only first 5 items
     LazyRow(modifier = Modifier.fillMaxWidth()) {
         items(limitedFooditem) { fooditem ->
             CoffeIterm(foodPictures = fooditem, modifier = Modifier.padding(9.dp), navController = navController)
@@ -296,6 +298,7 @@ fun FooditemsList(foodList: List<Main>, navController: NavController) {
     }
 }
 
+// Composable to display a rounded signature item card
 @Composable
 fun RoundedIterm(RoundedItermPictures: Round, modifier: Modifier) {
     RoundedItermCart(
@@ -304,9 +307,10 @@ fun RoundedIterm(RoundedItermPictures: Round, modifier: Modifier) {
     )
 }
 
+// Horizontal list of rounded signature items (limited to 5)
 @Composable
 fun RoundedItermList(RoundedList: List<Round>) {
-    val limitedRoundedIterms = RoundedList.take(5)
+    val limitedRoundedIterms = RoundedList.take(5) // Show only first 5 items
     LazyRow(modifier = Modifier.fillMaxWidth()) {
         items(limitedRoundedIterms) { RoundedIterm ->
             RoundedIterm(RoundedItermPictures = RoundedIterm, modifier = Modifier.padding(9.dp))
@@ -314,21 +318,22 @@ fun RoundedItermList(RoundedList: List<Round>) {
     }
 }
 
+// Banner slideshow to cycle through promotional images automatically
 @Composable
 fun BannerSlideshow(
-    bannerImages: List<Int>, // List of drawable resource IDs
-    slideshowInterval: Long = 200L // Time between slides in milliseconds
+    bannerImages: List<Int>, // Drawable resource IDs of banners
+    slideshowInterval: Long = 200L // Time interval between slides (ms)
 ) {
-    // Track the current image index
+    // State to track which banner image is currently shown
     var currentIndex by remember { mutableStateOf(0) }
 
-    // Automatically update the image index
+    // Effect that updates currentIndex every slideshowInterval milliseconds
     LaunchedEffect(currentIndex) {
-        delay(slideshowInterval) // Wait for the specified interval
-        currentIndex = (currentIndex + 1) % bannerImages.size // Cycle through images
+        delay(slideshowInterval) // Wait specified time
+        currentIndex = (currentIndex + 1) % bannerImages.size // Cycle to next image (loop back)
     }
 
-    // Display the current banner
+    // Display current banner image
     val currentBanner = painterResource(id = bannerImages[currentIndex])
     Image(
         painter = currentBanner,
@@ -337,7 +342,7 @@ fun BannerSlideshow(
             .fillMaxWidth()
             .height(250.dp)
             .padding(4.dp)
-            .clip(RoundedCornerShape(16.dp)),
-        contentScale = ContentScale.Crop
+            .clip(RoundedCornerShape(16.dp)), // Rounded corners for banners
+        contentScale = ContentScale.Crop // Crop to fill bounds nicely
     )
 }

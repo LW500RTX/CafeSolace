@@ -1,13 +1,18 @@
 package com.example.cafesolace.CommonSection
 
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType.Companion.toMediaType
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 fun callOpenAIChatAPI(userMessage: String, apiKey: String, callback: (String?) -> Unit) {
-    val client = OkHttpClient()
+    val client = OkHttpClient.Builder()
+        .callTimeout(30, TimeUnit.SECONDS)
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .build()
 
     val jsonBody = JSONObject().apply {
         put("model", "gpt-3.5-turbo")
@@ -20,7 +25,7 @@ fun callOpenAIChatAPI(userMessage: String, apiKey: String, callback: (String?) -
     }
 
     val requestBody = RequestBody.create(
-        "application/json".toMediaTypeOrNull(),
+        "application/json".toMediaType(),
         jsonBody.toString()
     )
 
@@ -37,20 +42,28 @@ fun callOpenAIChatAPI(userMessage: String, apiKey: String, callback: (String?) -
         }
 
         override fun onResponse(call: Call, response: Response) {
-            if (response.isSuccessful) {
-                val responseBody = response.body?.string()
-                if (responseBody != null) {
-                    val jsonResponse = JSONObject(responseBody)
-                    val message = jsonResponse.getJSONArray("choices")
-                        .getJSONObject(0)
-                        .getJSONObject("message")
-                        .getString("content")
-                    callback(message)
+            response.use {
+                if (it.isSuccessful) {
+                    val responseBody = it.body?.string()
+                    if (responseBody != null) {
+                        try {
+                            val jsonResponse = JSONObject(responseBody)
+                            val message = jsonResponse.getJSONArray("choices")
+                                .getJSONObject(0)
+                                .getJSONObject("message")
+                                .getString("content")
+                            callback(message)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            callback(null)
+                        }
+                    } else {
+                        callback(null)
+                    }
                 } else {
+                    println("OpenAI API Error: ${it.code} - ${it.body?.string()}")
                     callback(null)
                 }
-            } else {
-                callback(null)
             }
         }
     })

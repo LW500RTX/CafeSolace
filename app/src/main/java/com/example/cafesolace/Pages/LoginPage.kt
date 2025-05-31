@@ -34,13 +34,7 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-//        Image(
-//            painter = painterResource(id = R.drawable.bannermain), // Replace with your image in res/drawable
-//            contentDescription = "Background",
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .blur(8.dp) // Apply blur effect
-//        )
+
 
 
         // 🖼️ Load Image from Local Drawable Resource

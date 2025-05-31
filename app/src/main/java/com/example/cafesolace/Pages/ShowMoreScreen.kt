@@ -30,13 +30,14 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.cafesolace.R
 import kotlinx.coroutines.delay
 
-// Updated Dessert model to use imageUrl instead of imageRes
+// Data class representing a Dessert item with name, price, and image URL
 data class Dessert(val name: String, val price: String, val imageUrl: String)
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+// Main Composable function for the Dessert Screen
 fun DessertScreen(navController: NavController) {
-    // Replace these URLs with your actual Firebase Storage image URLs
+    // Sample list of desserts to display
     val desserts = listOf(
         Dessert("Espresso", "Rs.700.00", "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/expressso.jpg?alt=media&token=063cb27a-5a18-4085-b606-f419a007ef13"),
         Dessert("Latte", "Rs.790.00", "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/latte25.jpg?alt=media&token=7721df46-b3f4-4d28-b798-3a17e8a50abd"),
@@ -48,25 +49,34 @@ fun DessertScreen(navController: NavController) {
         Dessert("Faluda", "Rs.570.00", "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/c.png?alt=media&token=15a628b5-9692-4d92-a9eb-9d4bc4783c6e")
     )
 
+    // State to hold the current text entered in the search bar
     var searchQuery by remember { mutableStateOf("") }
+
+    // Filter the desserts based on the search query ignoring case
     val filteredDesserts = desserts.filter {
         it.name.contains(searchQuery, ignoreCase = true)
     }
 
+    // State to control the visibility of the search bar with animation
     var searchBarVisible by remember { mutableStateOf(false) }
+
+    // State to control the visibility of dessert cards with animation
     var cardsVisible by remember { mutableStateOf(false) }
 
+    // LaunchedEffect to trigger animations with delays on first composition
     LaunchedEffect(Unit) {
         delay(100)
-        searchBarVisible = true
+        searchBarVisible = true  // Show search bar after delay
         delay(300)
-        cardsVisible = true
+        cardsVisible = true      // Show dessert cards after further delay
     }
 
+    // Scaffold provides basic material design layout structure
     Scaffold(
-        topBar = { DessertTopBar(navController) },
-        content = { padding ->
+        topBar = { DessertTopBar(navController) }, // Top app bar composable
+        content = { padding -> // Content of the screen with padding applied from scaffold
             Column(modifier = Modifier.padding(padding)) {
+                // Animated visibility for search bar - slide and fade in
                 AnimatedVisibility(
                     visible = searchBarVisible,
                     enter = slideInVertically(
@@ -77,14 +87,16 @@ fun DessertScreen(navController: NavController) {
                     SearchBar(query = searchQuery, onQueryChanged = { searchQuery = it })
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp)) // Spacing between search bar and grid
 
+                // Grid layout showing desserts in 2 columns
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    // For each dessert in the filtered list, show an animated card
                     items(filteredDesserts) { dessert ->
                         AnimatedVisibility(
                             visible = cardsVisible,
@@ -101,17 +113,18 @@ fun DessertScreen(navController: NavController) {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+// Top app bar composable for the dessert screen
 @Composable
 fun DessertTopBar(navController: NavController) {
     TopAppBar(
-        title = { Text("TRENDING") },
+        title = { Text("TRENDING") }, // Title text
         navigationIcon = {
-            IconButton(onClick = { navController.navigate("MainScreen") }) {
+            IconButton(onClick = { navController.navigate("MainScreen") }) { // Back button navigation
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
         },
         actions = {
-            IconButton(onClick = { /* handle cart */ }) {
+            IconButton(onClick = { /* handle cart */ }) { // Shopping cart icon (action placeholder)
                 Icon(Icons.Default.ShoppingCart, contentDescription = "Cart")
             }
         }
@@ -119,49 +132,52 @@ fun DessertTopBar(navController: NavController) {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+// Search bar composable with text field and search icon
 @Composable
 fun SearchBar(query: String, onQueryChanged: (String) -> Unit) {
     TextField(
         value = query,
-        onValueChange = onQueryChanged,
-        placeholder = { Text("Search") },
+        onValueChange = onQueryChanged, // Callback to update query on user input
+        placeholder = { Text("Search") }, // Placeholder text inside text field
         leadingIcon = {
-            Icon(Icons.Default.Search, contentDescription = "Search Icon")
+            Icon(Icons.Default.Search, contentDescription = "Search Icon") // Search icon at start
         },
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(Color(0xFFDDE4FF)),
+            .clip(RoundedCornerShape(24.dp)) // Rounded corners for the search bar
+            .background(Color(0xFFDDE4FF)), // Background color of the search bar
         singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(containerColor = Color(0xFFDDE4FF))
+        colors = TextFieldDefaults.textFieldColors(containerColor = Color(0xFFDDE4FF)) // Colors for text field
     )
 }
 
+// Card composable that displays each dessert's image, name, price, and a buy button
 @Composable
 fun DessertCard(dessert: Dessert) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(8.dp)
+        shape = RoundedCornerShape(12.dp), // Rounded corners for card
+        elevation = CardDefaults.cardElevation(8.dp) // Elevation for shadow effect
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // Load image asynchronously from URL with placeholder and error images
             AsyncImage(
                 model = dessert.imageUrl,
                 contentDescription = dessert.name,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp),
+                    .height(120.dp), // Fixed height for images
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.z),
-                error = painterResource(R.drawable.a)
+                placeholder = painterResource(R.drawable.z), // Placeholder image while loading
+                error = painterResource(R.drawable.a)        // Error image if loading fails
             )
-            Text(dessert.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            Text(dessert.price, fontSize = 14.sp)
+            Text(dessert.name, fontWeight = FontWeight.Bold, fontSize = 16.sp) // Dessert name
+            Text(dessert.price, fontSize = 14.sp) // Dessert price
             Button(
-                onClick = { /* handle buy */ },
+                onClick = { /* handle buy */ }, // Buy button action placeholder
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                 modifier = Modifier.padding(8.dp)
             ) {
