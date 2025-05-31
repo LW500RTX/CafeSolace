@@ -17,72 +17,36 @@
     "dialog_cancel": "No"
   },
 
-  "items": {
-    "espresso": {
-      "name": "Espresso",
-      "price": "700.00"
-    },
-    "latte": {
-      "name": "Latte",
-      "price": "790.00"
-    },
-    "cappuccino": {
-      "name": "Cappuccino",
-      "price": "450.00"
-    },
-    "mocha": {
-      "name": "Mocha",
-      "price": "500.00"
-    },
-    "macchiato": {
-      "name": "Macchiato",
-      "price": "650.00"
-    }
-  },
-
-  "mains": {
-    "italian_cuisine": {
-      "name": "Italian Cuisine",
-      "price": "3400.00"
-    },
-    "margherita_pizza": {
-      "name": "Margherita Pizza",
-      "price": "2700.00"
-    },
-    "bangers_and_mash": {
-      "name": "Bangers and Mash",
-      "price": "1450.00"
-    },
-    "fish_and_chips": {
-      "name": "Fish and Chips",
-      "price": "2400.00"
-    },
-    "ham_and_cheese": {
-      "name": "Ham and Cheese",
-      "price": "1650.00"
-    }
-  },
-
-  "desserts": {
-    "cap_cakes": {
-      "name": "Cap cakes",
-      "price": "200.00"
+  "featured_desserts": {
+    "ice_cream": {
+      "name": "Ice cream",
+      "description": "Perfect bowl for serving creamy, delicious ice cream treats quickly.",
+      "price": "Rs.450.00",
+      "image_url": "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/icecream.jpg?alt=media&token=baaa5d5e-f729-4c0d-a4b9-ecc8ec088bd0"
     },
     "raspberry_tart": {
-      "name": "Raspberry Tart",
-      "price": "700.00"
-    },
-    "ice_cream_bowl": {
-      "name": "Ice Cream Bowl",
-      "price": "450.00"
+      "name": "Raspberry tart",
+      "description": "Buttery crust filled with sweet, tangy fresh raspberries and cream.",
+      "price": "Rs.990.00",
+      "image_url": "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/raspberrytart.jpg?alt=media&token=50e094db-c359-4e4f-aef0-469eba011024"
     },
     "macarons": {
-      "name": "Macarons",
-      "price": "350.00"
+      "name": "Macaron's",
+      "description": "Delicate, colorful almond cookies with smooth, flavorful creamy fillings inside.",
+      "price": "Rs.400.00",
+      "image_url": "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/macarons.jpg?alt=media&token=aa2310b2-f9db-42ff-b005-c6622c183e7e"
     },
-    "berry_with_whipped_cream_cake": {
-      "name": "Berry With Whipped Cream Cake",
-      "price": "650.00"
+    "berry_whipped_cream_cake": {
+      "name": "Berry with whipped cream cake",
+      "description": "Light cake topped with fresh berries and fluffy whipped cream.",
+      "price": "Rs.580.00",
+      "image_url": "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/berrywithwhippedcreamcake.jpg?alt=media&token=bb36d80a-7576-4da8-a0ab-48b43926a373"
+    },
+    "cup_cakes": {
+      "name": "Cup cakes",
+      "description": "Small, moist cakes topped with creamy frosting and sweet decorations.",
+      "price": "Rs.800.00",
+      "image_url": "https://firebasestorage.googleapis.com/v0/b/cafesolace-1.firebasestorage.app/o/cupcakes.jpg?alt=media&token=ab5f9f52-7253-4cef-ba63-9c89d107aff1"
     }
   }
 }

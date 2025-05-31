@@ -4,6 +4,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -187,25 +188,42 @@ fun MainScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Section title for Signature Items
-            Text(
-                text = "Our Signature Items",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
-                ),
+            Row(
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .align(Alignment.Start)
-                    .padding(horizontal = 10.dp)
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Our Signature Items",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                )
+
+                // Button to navigate to the full Dessert screen on click
+                TextButton(
+                    onClick = {
+                        navController.navigate("FeaturedDrinksPage")
+                    }
+                ) {
+                    Text(
+                        text = "Show More",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
+                }
+            }
+
 
             // Horizontal list of rounded style signature items
             RoundedItermList(RoundedList = RoundedItems().loadRoundedItems())
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Large promotional banner image with rounded corners
             Image(
                 painter = painterResource(R.drawable.banner11),
                 contentDescription = "Banner11",
@@ -213,9 +231,13 @@ fun MainScreen(navController: NavController) {
                     .fillMaxWidth()
                     .height(220.dp)
                     .padding(4.dp)
-                    .clip(RoundedCornerShape(16.dp)),
+                    .clip(RoundedCornerShape(16.dp))
+                    .clickable {
+                        navController.navigate("FoodScreen")
+                    },
                 contentScale = ContentScale.Crop
             )
+
 
             Spacer(modifier = Modifier.height(90.dp)) // Extra space at the bottom
         }

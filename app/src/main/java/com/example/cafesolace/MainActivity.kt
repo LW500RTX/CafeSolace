@@ -258,7 +258,7 @@ fun WeatherSuggestionDialog(navController: NavHostController) {
             confirmButton = {
                 TextButton(onClick = {
                     showDialog = false
-                    navController.navigate("master2") // Navigate to drink selection screen
+                    navController.navigate("DessertScreen") // Navigate to drink selection screen
                 }) {
                     Text("Choose a Drink")
                 }

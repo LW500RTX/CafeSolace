@@ -119,7 +119,7 @@ fun DessertTopBar(navController: NavController) {
     TopAppBar(
         title = { Text("TRENDING") }, // Title text
         navigationIcon = {
-            IconButton(onClick = { navController.navigate("MainScreen") }) { // Back button navigation
+            IconButton(onClick = { navController?.popBackStack() }) { // Back button navigation
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
         },

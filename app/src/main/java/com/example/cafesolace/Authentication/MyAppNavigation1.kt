@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.cafesolace.CommonSection.BottomNavigationScreen
 import com.example.cafesolace.Pages.DessertScreen
+import com.example.cafesolace.Pages.FeaturedDrinksPage
+import com.example.cafesolace.Pages.FoodScreen
 import com.example.cafesolace.Pages.MainScreen
 import com.example.cafesolace.Pages.Master2Screen
 
@@ -45,6 +47,12 @@ fun MyAppNavigation1(
         // Composable destination for DessertScreen page
         composable("DessertScreen") {
             DessertScreen(navController)
+        }
+        composable("FoodScreen") {
+            FoodScreen(navController)
+        }
+        composable("FeaturedDrinksPage") {
+            FeaturedDrinksPage(navController)
         }
     }
 }
