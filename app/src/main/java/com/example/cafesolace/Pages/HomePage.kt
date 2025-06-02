@@ -92,28 +92,28 @@ fun MainScreen(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Build styled text with "Cafe" and "Solace" differently colored
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                MaterialTheme.colorScheme.tertiary,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 34.sp
-                            )
-                        ) {
-                            append("Cafe ")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                MaterialTheme.colorScheme.error,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 34.sp
-                            )
-                        ) {
-                            append("Solace")
-                        }
-                    }
-                )
+//                Text(
+//                    text = buildAnnotatedString {
+//                        withStyle(
+//                            style = SpanStyle(
+//                                MaterialTheme.colorScheme.tertiary,
+//                                fontWeight = FontWeight.Bold,
+//                                fontSize = 34.sp
+//                            )
+//                        ) {
+//                            append("Cafe ")
+//                        }
+//                        withStyle(
+//                            style = SpanStyle(
+//                                MaterialTheme.colorScheme.error,
+//                                fontWeight = FontWeight.Bold,
+//                                fontSize = 34.sp
+//                            )
+//                        ) {
+//                            append("Solace")
+//                        }
+//                    }
+//                )
 
                 // You can add a Cart IconButton here if needed (currently not present)
             }
